@@ -17,8 +17,7 @@ class VertexContainer {
     void Init(std::vector<float> &vertexBuffer,
               std::vector<uint32> &indexBuffer, uint32 shaderProgramId);
 
-    void InitGrid(std::vector<float> &vertexBuffer,
-                  std::vector<uint32> &indexBuffer);
+    void InitGrid();
 
     void AddObjects(const std::vector<Object> &);
     void UpdateVertexBuffer(const std::vector<float> &vertices, uint32 size);

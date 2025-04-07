@@ -87,11 +87,10 @@ void VertexContainer::Init(std::vector<float>& vertexBuffer,
     // }
 }
 
-void VertexContainer::InitGrid(std::vector<float>& vertexBuffer,
-                               std::vector<uint32>& indexBuffer) {
+void VertexContainer::InitGrid() {
     glGenVertexArrays(1, &gridVAO);
-    glBindVertexArray(gridVAO);
-    glBindVertexArray(0);
+    // glBindVertexArray(gridVAO);
+    // glBindVertexArray(0);
 }
 
 /**
@@ -166,7 +165,7 @@ void VertexContainer::ApplyTexture(uint32 shaderProgramId, uint32 textureId) {
     glEnable(GL_BLEND);        // allow the grid to blend over other objects
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);

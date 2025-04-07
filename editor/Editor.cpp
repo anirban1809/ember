@@ -67,18 +67,11 @@ void Editor::OnInit() {
     state.fs = fs;
     ObjLoader* loader = new ObjLoader();
 
-    // loader->LoadObjectFile(
-    //     "/Users/anirban/Documents/Code/engine/editor/models/"
-    //     "testscene.obj");
-    // loader->LoadMaterialFile(
-    //     "/Users/anirban/Documents/Code/engine/editor/models/"
-    //     "testscene.mtl");
-
     std::vector<float> vertexArray;
     std::vector<uint32> indexArray;
 
     if (Importer::Load("/Users/anirban/Documents/Code/engine/editor/models/"
-                       "Chair.obj",
+                       "testscene.obj",
                        vertexArray, indexArray)) {
         std::cout << "Loaded mesh!" << std::endl;
         std::cout << "Unique vertices: " << vertexArray.size() / 8 << std::endl;
@@ -86,40 +79,6 @@ void Editor::OnInit() {
     } else {
         std::cerr << "Failed to load mesh." << std::endl;
     }
-
-    // for (auto const& object : loader->GetObjects()) {
-    //     std::vector<float> vertices;
-    //     for (const auto& [x, y, z, u, v, nx, ny, nz] :
-    //          object.GetAllVertexData()) {
-    //         vertices.push_back(x);
-    //         vertices.push_back(y);
-    //         vertices.push_back(z);
-    //         vertices.push_back(u);
-    //         vertices.push_back(v);
-    //         vertices.push_back(nx);
-    //         vertices.push_back(ny);
-    //         vertices.push_back(nz);
-    //     }
-
-    //     allvertices.insert(allvertices.end(), vertices.begin(),
-    //     vertices.end());
-
-    //     std::vector<uint32> localIndices = object.GetVertexIndices();
-
-    //     for (int i = 0; i < object.GetVertexIndices().size(); i++) {
-    //         localIndices[i] = localIndices[i] + object.vertexIndexOffset;
-    //     }
-
-    //     allIndices.insert(allIndices.end(), localIndices.begin(),
-    //                       localIndices.end());
-    // }
-
-    // std::vector<float> planeVertices = {// positions
-    //                                     -1.0f, 0.0f, -1.0f, 1.0f,  0.0f,
-    //                                     -1.0f, 1.0f,  0.0f, 1.0f,  -1.0f,
-    //                                     0.0f, 1.0f};
-
-    // std::vector<unsigned int> planeIndices = {0, 1, 2, 2, 3, 0};
 
     Logger::Log(LOG_INFO, "Initializing Application");
     Logger::Log(LOG_INFO, "Engine Version: 0.0.2 (Feb '25)");
@@ -140,16 +99,8 @@ void Editor::OnInit() {
 
     container = new VertexContainer(shader, gridShader);
 
-    // container->AddObjects(loader->GetObjects());
-
-    std::vector<float> planeVertices = {// positions
-                                        -1.0f, 0.0f, -1.0f, 1.0f,  0.0f, -1.0f,
-                                        1.0f,  0.0f, 1.0f,  -1.0f, 0.0f, 1.0f};
-
-    std::vector<unsigned int> planeIndices = {0, 1, 2, 2, 3, 0};
-
     container->Init(vertexArray, indexArray, shader->GetProgramId());
-    container->InitGrid(planeVertices, planeIndices);
+    container->InitGrid();
     container->Bind();
 
     camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
@@ -157,7 +108,7 @@ void Editor::OnInit() {
     camera.SetCameraLook(0.0f, 0.0f, 0.0f);
 
     light.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-    light.SetPosition(glm::vec3(0.0, 15.0, 0.0));
+    light.SetPosition(glm::vec3(0.0, 100.0, 0.0));
 
     container->AttachCamera(&camera);
     container->AttachLight(&light);
@@ -208,7 +159,9 @@ void Editor::OnKeyPressed(int key) {
 }
 
 void Editor::OnMousePressed(int button) {
-    if (!state.isFrameBufferPanelHovered) { return; }
+    if (!state.isFrameBufferPanelHovered) {
+        return;
+    }
     if (button == MouseEvent::MOUSE_BUTTON_LEFT) {
         std::cout << "Left mouse button clicked!" << std::endl;
         leftMouseDown = true;
@@ -217,7 +170,9 @@ void Editor::OnMousePressed(int button) {
 }
 
 void Editor::OnMouseReleased(int button) {
-    if (!state.isFrameBufferPanelHovered) { return; }
+    if (!state.isFrameBufferPanelHovered) {
+        return;
+    }
     if (button == MouseEvent::MOUSE_BUTTON_LEFT) {
         std::cout << "Left mouse button released!" << std::endl;
         leftMouseDown = false;
@@ -225,7 +180,9 @@ void Editor::OnMouseReleased(int button) {
 }
 
 void Editor::OnMouseMoved(double xpos, double ypos) {
-    if (!leftMouseDown) { return; }
+    if (!leftMouseDown) {
+        return;
+    }
 
     if (firstMouse) {
         // On the first mouse event, initialize the last positions.

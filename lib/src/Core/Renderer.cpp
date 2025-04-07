@@ -1,6 +1,8 @@
 #include "../../include/Core/Renderer.h"
 #include <iostream>
 
+RendererAPI Renderer::API = RendererAPI::OpenGL;
+
 Renderer::Renderer() {
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
