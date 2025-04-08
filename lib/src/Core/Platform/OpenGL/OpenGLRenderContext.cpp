@@ -7,9 +7,14 @@
 
 void OpenGLRenderContext::Submit(const Mesh& mesh) {
     mesh.material->Apply();
+
     auto shader = mesh.material->GetShader();
     shader->SetUniformMat4("u_Model", mesh.transform);
-    Submit(mesh.vertices, mesh.indices, mesh.layout, mesh.transform);
+
+    mesh.vao->Bind();
+    glDrawElements(GL_TRIANGLES, mesh.ibo->GetCount(), GL_UNSIGNED_INT,
+                   nullptr);
+    mesh.vao->Unbind();
 }
 
 void OpenGLRenderContext::BeginScene(const glm::mat4& viewProjection,
@@ -19,28 +24,11 @@ void OpenGLRenderContext::BeginScene(const glm::mat4& viewProjection,
     shader->SetUniformMat4("u_ViewProjection", viewProjection);
 }
 
+/**@deprecated */
 void OpenGLRenderContext::Submit(const std::vector<float>& vertices,
                                  const std::vector<uint32>& indices,
                                  const VertexLayout& layout,
-                                 const glm::mat4& transform) {
-    auto vao = std::make_shared<OpenGLVertexArray>();
-    auto vbo = std::make_shared<OpenGLVertexBuffer>(
-        vertices.data(), vertices.size() * sizeof(float), layout.GetStride());
-    auto ibo = std::make_shared<OpenGLIndexBuffer>(indices.data(),
-                                                   (uint32)indices.size());
-
-    vao->AddVertexBuffer(vbo);
-    vao->SetVertexLayout(layout);
-    vao->SetIndexBuffer(ibo);
-
-    // Apply transform matrix
-    vao->Bind();
-    vao->GetIndexBuffer()->Bind();
-
-    glDrawElements(GL_TRIANGLES, ibo->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-    vao->Unbind();
-}
+                                 const glm::mat4& transform) {}
 
 void OpenGLRenderContext::EndScene() {
     // In current setup, everything is rendered immediately in Submit().

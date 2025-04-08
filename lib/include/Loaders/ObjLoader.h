@@ -15,7 +15,7 @@ enum class LightingMode {
     SPECULAR_ENABLED = 2
 };
 
-class Material {
+class MaterialInstance {
    public:
     std::string name;
     glm::vec3 ambientColor;
@@ -39,8 +39,8 @@ class Object {
     void SetTextureIndices(const std::vector<uint32>& indices);
     void SetNormalIndices(const std::vector<uint32>& indices);
     void AdjustReusedVertices();
-    void SetMaterial(const Material& material);
-    Material GetMaterial() const;
+    void SetMaterial(const MaterialInstance& material);
+    MaterialInstance GetMaterial() const;
     std::vector<std::tuple<vec3float, vec2float>> GetVerticesAndTextures()
         const;
 
@@ -64,7 +64,7 @@ class Object {
     std::vector<uint32> vertexIndices;
     std::vector<uint32> textureIndices;
     std::vector<uint32> normalIndices;
-    Material material;
+    MaterialInstance material;
 };
 
 class ObjLoader {
@@ -77,7 +77,7 @@ class ObjLoader {
     std::string objectFile;
     std::string materialFile;
     std::vector<Object> objects;
-    std::vector<Material> materials;
+    std::vector<MaterialInstance> materials;
 };
 
 #endif  // __OBJLOADER_H__

@@ -7,6 +7,7 @@
 
 class RenderContext {
    public:
+    static std::shared_ptr<RenderContext> Create();
     virtual ~RenderContext() = default;
 
     virtual void BeginScene(const glm::mat4& viewProjection,
@@ -23,5 +24,4 @@ class RenderContext {
 
     virtual void Clear() = 0;
 };
-
 #endif  // __RENDERCONTEXT_H__

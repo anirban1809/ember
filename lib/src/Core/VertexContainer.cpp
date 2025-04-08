@@ -161,14 +161,14 @@ void VertexContainer::ApplyTexture(uint32 shaderProgramId, uint32 textureId) {
 
     glBindVertexArray(gridVAO);
 
-    glDisable(GL_DEPTH_TEST);  // prevent depth from discarding the grid
-    glEnable(GL_BLEND);        // allow the grid to blend over other objects
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glDisable(GL_DEPTH_TEST);  // prevent depth from discarding the grid
+    // glEnable(GL_BLEND);        // allow the grid to blend over other objects
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    glDisable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
+    // glDisable(GL_BLEND);
+    // glEnable(GL_DEPTH_TEST);
     glBindVertexArray(0);
     // glActiveTexture(GL_TEXTURE0);
     // glBindTexture(GL_TEXTURE_2D, textureId);

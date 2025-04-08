@@ -48,7 +48,9 @@ void Object::SetNormalIndices(const std::vector<uint32>& v) {
     normalIndices = v;
 }
 
-void Object::SetMaterial(const Material& _material) { material = _material; }
+void Object::SetMaterial(const MaterialInstance& _material) {
+    material = _material;
+}
 
 std::vector<uint32> Object::GetVertexIndices() const { return vertexIndices; }
 
@@ -104,7 +106,7 @@ Object::GetAllVertexData() const {
     return output;
 }
 
-Material Object::GetMaterial() const { return material; }
+MaterialInstance Object::GetMaterial() const { return material; }
 
 void ObjLoader::LoadObjectFile(const std::string& filename) {
     std::ifstream file(filename);
@@ -163,7 +165,9 @@ void ObjLoader::LoadObjectFile(const std::string& filename) {
             }
         }
 
-        if (type == "#") { continue; }
+        if (type == "#") {
+            continue;
+        }
 
         if (type == "v") {
             float x, y, z;
@@ -190,9 +194,15 @@ void ObjLoader::LoadObjectFile(const std::string& filename) {
                 uint32 v, vt, vn;
                 ss >> v >> slash >> vt >> slash >> vn;
 
-                if (v > localMaxVertexIndex) { localMaxVertexIndex = v; }
-                if (vt > localMaxTextureIndex) { localMaxTextureIndex = vt; }
-                if (vn > localMaxNormalIndex) { localMaxNormalIndex = vn; }
+                if (v > localMaxVertexIndex) {
+                    localMaxVertexIndex = v;
+                }
+                if (vt > localMaxTextureIndex) {
+                    localMaxTextureIndex = vt;
+                }
+                if (vn > localMaxNormalIndex) {
+                    localMaxNormalIndex = vn;
+                }
 
                 vertexIndices.push_back(v - globalMaxVertexIndex - 1);
                 textureIndices.push_back(vt - globalMaxTextureIndex - 1);
@@ -222,7 +232,9 @@ void ObjLoader::LoadObjectFile(const std::string& filename) {
 
     this->objects = allObjects;
 
-    for (auto& object : objects) { object.AdjustReusedVertices(); }
+    for (auto& object : objects) {
+        object.AdjustReusedVertices();
+    }
 
     file.close();
 }
@@ -320,7 +332,7 @@ void ObjLoader::LoadMaterialFile(const std::string& filename) {
     }
 
     std::string line;
-    Material currentMaterial;
+    MaterialInstance currentMaterial;
     bool materialCreated;
 
     while (std::getline(file, line)) {
@@ -329,11 +341,13 @@ void ObjLoader::LoadMaterialFile(const std::string& filename) {
 
         ss >> type;
 
-        if (type == "#") { continue; }
+        if (type == "#") {
+            continue;
+        }
 
         if (type == "newmtl") {
             if (!materialCreated) {
-                currentMaterial = Material();
+                currentMaterial = MaterialInstance();
                 materialCreated = true;
                 ss >> currentMaterial.name;
             } else {
@@ -361,9 +375,13 @@ void ObjLoader::LoadMaterialFile(const std::string& filename) {
             currentMaterial.specularColor = glm::vec3(r, g, b);
         }
 
-        if (type == "Ns") { ss >> currentMaterial.shininess; }
+        if (type == "Ns") {
+            ss >> currentMaterial.shininess;
+        }
 
-        if (type == "d") { ss >> currentMaterial.transparency; }
+        if (type == "d") {
+            ss >> currentMaterial.transparency;
+        }
 
         if (type == "illum") {
             char mode;
@@ -383,11 +401,17 @@ void ObjLoader::LoadMaterialFile(const std::string& filename) {
             }
         }
 
-        if (type == "map_Kd") { ss >> currentMaterial.diffuseTextureFile; }
+        if (type == "map_Kd") {
+            ss >> currentMaterial.diffuseTextureFile;
+        }
 
-        if (type == "map_Ks") { ss >> currentMaterial.specularMapFile; }
+        if (type == "map_Ks") {
+            ss >> currentMaterial.specularMapFile;
+        }
 
-        if (type == "map_Bump") { ss >> currentMaterial.bumpMapFile; }
+        if (type == "map_Bump") {
+            ss >> currentMaterial.bumpMapFile;
+        }
     }
 
     materials.push_back(currentMaterial);

@@ -18,5 +18,9 @@ class ShaderProgram {
     virtual void SetUniformFloat3(const std::string& name,
                                   const glm::vec3& value) = 0;
     virtual void SetUniformInt(const std::string& name, int32 value) = 0;
+    std::string LoadShaderSource(const std::string&);
+
+    static std::shared_ptr<ShaderProgram> Create(const std::string&,
+                                                 const std::string&);
 };
 #endif  // __SHADERPROGRAM_H__

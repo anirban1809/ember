@@ -1,11 +1,16 @@
 #include "../../../../include/Core/Platform/OpenGL/OpenGLShaderProgram.h"
 #include "../../../../../vendor/glew-2.2.0/include/GL/glew.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 OpenGLShaderProgram::OpenGLShaderProgram(const std::string& vertexSrc,
                                          const std::string& fragmentSrc) {
-    uint32 vertexShader = CompileShader(GL_VERTEX_SHADER, vertexSrc);
-    uint32 fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentSrc);
+    std::string vertexCode = LoadShaderSource(vertexSrc);
+    std::string fragmentCode = LoadShaderSource(fragmentSrc);
+
+    uint32 vertexShader = CompileShader(GL_VERTEX_SHADER, vertexCode);
+    uint32 fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentCode);
     rendererID = LinkProgram(vertexShader, fragmentShader);
 
     glDeleteShader(vertexShader);

@@ -19,7 +19,7 @@ class OpenGLVertexArray : public VertexArray {
         const override;
     const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override;
 
-    void SetVertexLayout(const VertexLayout& layout);
+    void SetVertexLayout(const VertexLayout& layout) override;
 
    private:
     uint32 rendererID;

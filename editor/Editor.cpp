@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 #include "Core/Types.h"
+#include "Core/RenderContext.h"
 #include "UI/ImGui/Panels/ScenePropsPanel.h"
 #include "UI/ImGui/Panels/NodePropsPanel.h"
 #include "UI/ImGui/Panels/FrameBufferPanel.h"
@@ -81,9 +82,22 @@ void Editor::OnInit() {
     }
 
     Logger::Log(LOG_INFO, "Initializing Application");
-    Logger::Log(LOG_INFO, "Engine Version: 0.0.2 (Feb '25)");
+    Logger::Log(LOG_INFO, "Ember Engine Version: 0.0.3 (Apr '25)");
 
     std::cout << std::filesystem::current_path() << std::endl;
+
+    camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
+    camera.SetCameraPosition(0.0f, 100.0f, 100.0f);
+    camera.SetCameraLook(0.0f, 0.0f, 0.0f);
+
+    std::shared_ptr<RenderContext> context = RenderContext::Create();
+    std::shared_ptr<ShaderProgram> mainShader = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+        "vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+        "fragment_shader.glsl");
+
+    context->BeginScene(camera.GetView() * camera.GetProjection(), mainShader);
 
     shader = new Shader(
         "/Users/anirban/Documents/Code/engine/editor/Shaders/"
@@ -102,10 +116,6 @@ void Editor::OnInit() {
     container->Init(vertexArray, indexArray, shader->GetProgramId());
     container->InitGrid();
     container->Bind();
-
-    camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
-    camera.SetCameraPosition(0.0f, 100.0f, 100.0f);
-    camera.SetCameraLook(0.0f, 0.0f, 0.0f);
 
     light.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
     light.SetPosition(glm::vec3(0.0, 100.0, 0.0));
