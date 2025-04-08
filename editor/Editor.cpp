@@ -48,7 +48,7 @@ void Editor::DefineUI() {
 }
 
 void Editor::OnInit() {
-    scenebuffer = new FrameBuffer(1000.0f, 1000.0f);
+    scenebuffer = FrameBuffer::Create(1000.0f, 1000.0f);
     uiEngine.Init(window->GetGLFWWindow());
     GLFWmonitor* primary = glfwGetPrimaryMonitor();
     if (!primary) {
@@ -90,14 +90,15 @@ void Editor::OnInit() {
     camera.SetCameraPosition(0.0f, 100.0f, 100.0f);
     camera.SetCameraLook(0.0f, 0.0f, 0.0f);
 
-    std::shared_ptr<RenderContext> context = RenderContext::Create();
-    std::shared_ptr<ShaderProgram> mainShader = ShaderProgram::Create(
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-        "vertex_shader.glsl",
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-        "fragment_shader.glsl");
+    // std::shared_ptr<RenderContext> context = RenderContext::Create();
+    // std::shared_ptr<ShaderProgram> mainShader = ShaderProgram::Create(
+    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+    //     "vertex_shader.glsl",
+    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+    //     "fragment_shader.glsl");
 
-    context->BeginScene(camera.GetView() * camera.GetProjection(), mainShader);
+    // context->BeginScene(camera.GetView() * camera.GetProjection(),
+    // mainShader);
 
     shader = new Shader(
         "/Users/anirban/Documents/Code/engine/editor/Shaders/"

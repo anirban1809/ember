@@ -11,7 +11,7 @@
 class FramebufferPanel : public ImGuiPanel {
    public:
     FramebufferPanel(const std::string& title, ApplicationState& state,
-                     FrameBuffer* sceneBuffer);
+                     std::shared_ptr<FrameBuffer> sceneBuffer);
     void Render() override;
 
     void SetTexture(unsigned int id, const glm::ivec2& size);
@@ -22,7 +22,7 @@ class FramebufferPanel : public ImGuiPanel {
    private:
     ApplicationState& state;
     std::string title;
-    FrameBuffer* sceneBuffer;
+    std::shared_ptr<FrameBuffer> sceneBuffer;
     glm::ivec2 textureSize;
     uint32 textureID;
     bool isHovered = false;

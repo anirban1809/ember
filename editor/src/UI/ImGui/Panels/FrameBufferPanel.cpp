@@ -7,11 +7,11 @@
 
 FramebufferPanel::FramebufferPanel(const std::string& title,
                                    ApplicationState& state,
-                                   FrameBuffer* sceneBuffer)
+                                   std::shared_ptr<FrameBuffer> sceneBuffer)
     : title(title), sceneBuffer(sceneBuffer), state(state) {}
 
 void FramebufferPanel::SetTexture(unsigned int id, const glm::ivec2& size) {
-    textureID = sceneBuffer->GetFrameTexture();
+    textureID = sceneBuffer->GetColorAttachmentTexture();
     textureSize = size;
 }
 
@@ -23,17 +23,17 @@ void FramebufferPanel::Render() {
     const float window_width = ImGui::GetContentRegionAvail().x;
     const float window_height = ImGui::GetContentRegionAvail().y;
 
-    sceneBuffer->RescaleFrameBuffer(window_width, window_height);
+    sceneBuffer->Resize(window_width, window_height);
 
     glViewport(0, 0, window_width, window_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     ImVec2 position = ImGui::GetCursorScreenPos();
 
-    ImGui::Image(static_cast<ImTextureID>(
-                     static_cast<uintptr_t>(sceneBuffer->GetFrameTexture())),
-                 ImVec2(window_width, window_height), ImVec2(0, 1),
-                 ImVec2(1, 0));
+    ImGui::Image(
+        static_cast<ImTextureID>(
+            static_cast<uintptr_t>(sceneBuffer->GetColorAttachmentTexture())),
+        ImVec2(window_width, window_height), ImVec2(0, 1), ImVec2(1, 0));
 
     ImGui::End();
 }

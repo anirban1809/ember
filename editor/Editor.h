@@ -33,7 +33,7 @@ class Editor : public Application {
     float movementSpeed = 1.0f;
     UIEngine uiEngine;
     ImGuiLayer *imGuiBackend;
-    FrameBuffer *scenebuffer;
+    std::shared_ptr<FrameBuffer> scenebuffer;
     ApplicationState state;
     FileSystem fs;
     std::vector<std::string> assets;
