@@ -6,8 +6,7 @@
 
 class OpenGLRenderContext : public RenderContext {
    public:
-    void BeginScene(const glm::mat4& viewProjection,
-                    std::shared_ptr<ShaderProgram> shader) override;
+    void BeginScene(std::vector<std::shared_ptr<ShaderProgram>>&) override;
     void Submit(const std::vector<float>& vertices,
                 const std::vector<uint32>& indices, const VertexLayout& layout,
                 const glm::mat4& transform) override;

@@ -10,8 +10,7 @@ class RenderContext {
     static std::shared_ptr<RenderContext> Create();
     virtual ~RenderContext() = default;
 
-    virtual void BeginScene(const glm::mat4& viewProjection,
-                            std::shared_ptr<ShaderProgram> shader) = 0;
+    virtual void BeginScene(std::vector<std::shared_ptr<ShaderProgram>>&) = 0;
 
     virtual void Submit(const std::vector<float>& vertices,
                         const std::vector<uint32>& indices,

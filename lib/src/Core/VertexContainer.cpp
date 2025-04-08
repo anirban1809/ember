@@ -182,7 +182,7 @@ void VertexContainer::ApplyTexture(uint32 shaderProgramId, uint32 textureId) {
     //     shader->GetUniformLocation(shaderProgramId, "color"), 0.2f, 0.3f,
     //     0.3f);
 
-    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(10.0f);
 
     int32 modelUniform = shader->GetUniformLocation(shaderProgramId, "model");
     int32 projectionUniform =

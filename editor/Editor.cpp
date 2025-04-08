@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 #include "Core/Types.h"
+#include "Core/Utils/MonitorUtils.h"
 #include "Core/RenderContext.h"
 #include "UI/ImGui/Panels/ScenePropsPanel.h"
 #include "UI/ImGui/Panels/NodePropsPanel.h"
@@ -50,23 +51,15 @@ void Editor::DefineUI() {
 void Editor::OnInit() {
     scenebuffer = FrameBuffer::Create(1000.0f, 1000.0f);
     uiEngine.Init(window->GetGLFWWindow());
-    GLFWmonitor* primary = glfwGetPrimaryMonitor();
-    if (!primary) {
-        std::cerr << "Failed to get primary monitor!" << std::endl;
-        return;
-    }
-
-    // Step 2: Get monitor work area
-    int x, y, width, height;
-    glfwGetMonitorWorkarea(primary, &x, &y, &width, &height);
+    MonitorWorkArea area = MonitorUtils::GetPrimaryMonitorWorkArea();
 
     // Step 3: Print it
-    std::cout << "Usable screen area: " << width << "x" << height
-              << " at position (" << x << ", " << y << ")" << std::endl;
+    std::cout << "Usable screen area: " << area.width << "x" << area.height
+              << " at position (" << area.x << ", " << area.y << ")"
+              << std::endl;
 
     DefineUI();
     state.fs = fs;
-    ObjLoader* loader = new ObjLoader();
 
     std::vector<float> vertexArray;
     std::vector<uint32> indexArray;
@@ -84,21 +77,26 @@ void Editor::OnInit() {
     Logger::Log(LOG_INFO, "Initializing Application");
     Logger::Log(LOG_INFO, "Ember Engine Version: 0.0.3 (Apr '25)");
 
-    std::cout << std::filesystem::current_path() << std::endl;
-
     camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
     camera.SetCameraPosition(0.0f, 100.0f, 100.0f);
     camera.SetCameraLook(0.0f, 0.0f, 0.0f);
 
-    // std::shared_ptr<RenderContext> context = RenderContext::Create();
-    // std::shared_ptr<ShaderProgram> mainShader = ShaderProgram::Create(
-    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-    //     "vertex_shader.glsl",
-    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-    //     "fragment_shader.glsl");
+    std::shared_ptr<RenderContext> context = RenderContext::Create();
+    std::shared_ptr<ShaderProgram> mainShader = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+        "vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+        "fragment_shader.glsl");
 
-    // context->BeginScene(camera.GetView() * camera.GetProjection(),
-    // mainShader);
+    auto grid = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
+        "grid_vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
+        "grid_fragment_shader.glsl");
+
+    std::vector<std::shared_ptr<ShaderProgram>> shaders;
+    shaders.push_back(mainShader);
+    context->BeginScene(shaders);
 
     shader = new Shader(
         "/Users/anirban/Documents/Code/engine/editor/Shaders/"
@@ -240,6 +238,7 @@ void Editor::OnUpdate() {}
 void Editor::OnRender() {
     scenebuffer->Bind();
     scenebuffer->Clear();
+
     container->Bind();
     container->Draw(shader->GetProgramId());
     container->Unbind();

@@ -3,7 +3,7 @@ file(GLOB_RECURSE SOURCES_MM "${CMAKE_CURRENT_SOURCE_DIR}/src/*.mm")
 set(EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/include/UI/MacOS/FileOpenDialog.mm")
 
 
-add_executable(release main.cpp Editor.cpp ${EXTERNAL} ${SOURCES} )
+add_executable(release main.cpp EmberEditor.cpp ${EXTERNAL} ${SOURCES} )
 target_compile_definitions(release PRIVATE PLATFORM_MAC)
 
 set(ASSIMP_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../vendor/assimp/include")

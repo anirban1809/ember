@@ -17,11 +17,11 @@ void OpenGLRenderContext::Submit(const Mesh& mesh) {
     mesh.vao->Unbind();
 }
 
-void OpenGLRenderContext::BeginScene(const glm::mat4& viewProjection,
-                                     std::shared_ptr<ShaderProgram> shader) {
-    this->viewProjection = viewProjection;
-    shader->Bind();
-    shader->SetUniformMat4("u_ViewProjection", viewProjection);
+void OpenGLRenderContext::BeginScene(
+    std::vector<std::shared_ptr<ShaderProgram>>& shaders) {
+    for (auto const& shader : shaders) {
+        shader->Bind();
+    }
 }
 
 /**@deprecated */
