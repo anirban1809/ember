@@ -17,6 +17,11 @@ add_library(lib STATIC ${SOURCES_LOCAL} ${SOURCES_DEPS})
 # Public headers
 target_include_directories(lib PUBLIC
  ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/vendor
+    ${CMAKE_SOURCE_DIR}/vendor/assimp/include
+    ${CMAKE_SOURCE_DIR}/vendor/assimp/build/include
+    ${CMAKE_SOURCE_DIR}/vendor/glfw-3.4.bin.MACOS/include
+    ${CMAKE_SOURCE_DIR}/vendor/imgui
 )
 
 target_link_libraries(lib PUBLIC

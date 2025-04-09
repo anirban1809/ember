@@ -1,13 +1,10 @@
 #ifndef __MESH_H__
 #define __MESH_H__
 
-#include "Types.h"
-#include "Material.h"
-#include "VertexLayout.h"
-#include "VertexArray.h"
-#include <vector>
-#include <memory>
-#include "../../../vendor/glm/glm.hpp"
+#include "Core/Material.h"
+#include "Core/VertexArray.h"
+#include "assimp/Importer.hpp"
+#include <glm/glm.hpp>
 
 struct Mesh {
     glm::mat4 transform;

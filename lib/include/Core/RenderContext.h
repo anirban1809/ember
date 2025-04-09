@@ -4,13 +4,36 @@
 #include "ShaderProgram.h"
 #include "VertexLayout.h"
 #include "Mesh.h"
+#include <memory>
+#include <vector>
 
 class RenderContext {
    public:
+    /**
+     * @brief
+     *
+     * @return std::shared_ptr<RenderContext>
+     */
     static std::shared_ptr<RenderContext> Create();
+
+    /**
+     * @brief Destroy the Render Context object
+     *
+     */
     virtual ~RenderContext() = default;
 
+    /**
+     * @brief
+     *
+     */
     virtual void BeginScene(std::vector<std::shared_ptr<ShaderProgram>>&) = 0;
+
+    /**
+     * @brief Set the Global Shaders object
+     *
+     */
+    virtual void SetGlobalShaders(
+        const std::vector<std::shared_ptr<ShaderProgram>>&) = 0;
 
     virtual void Submit(const std::vector<float>& vertices,
                         const std::vector<uint32>& indices,
@@ -18,6 +41,9 @@ class RenderContext {
                         const glm::mat4& transform) = 0;
 
     virtual void Submit(const Mesh& mesh) = 0;
+    virtual void SubmitArrays(std::shared_ptr<VertexArray> vao,
+                              std::shared_ptr<ShaderProgram> shader,
+                              uint32 vertexCount) = 0;
 
     virtual void EndScene() = 0;
 

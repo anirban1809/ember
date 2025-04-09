@@ -1,10 +1,7 @@
-#include "../../include/Core/Application.h"
-#include "../../include/Core/FrameBuffer.h"
-#include "../../../vendor/glfw-3.4.bin.MACOS/include/GLFW/glfw3.h"
+
+#include "Core/Application.h"
+#include <GLFW/glfw3.h>
 #include <iostream>
-#include "../../../vendor/imgui/imgui.h"
-#include "../../../vendor/imgui/imgui_impl_glfw.h"
-#include "../../../vendor/imgui/imgui_impl_opengl3.h"
 
 Application::Application(int width, int height, const char* title) {
     window = new Window(width, height, title);

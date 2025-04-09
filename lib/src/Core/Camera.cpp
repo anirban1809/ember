@@ -1,5 +1,6 @@
-#include "../../include/Core/Camera.h"
-#include "../../../vendor/glm/gtc/matrix_transform.hpp"
+
+#include "Core/Camera.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 glm::vec3& Camera::GetCameraPosition() { return cameraPosition; }
 

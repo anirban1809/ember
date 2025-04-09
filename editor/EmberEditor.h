@@ -1,8 +1,15 @@
 #ifndef __EMBEREDITOR_H__
 #define __EMBEREDITOR_H__
 
-#include <Core/Application.h>
-#include "./include/UI/ApplicationState.h"
+#include "Core/Application.h"
+#include "Core/RenderContext.h"
+#include "Core/ShaderProgram.h"
+#include "UI/ApplicationState.h"
+#include "UI/GridRenderer.h"
+#include "UI/UIEngine.h"
+#include <memory>
+template <typename T>
+using Rc = std::shared_ptr<T>;
 
 class EmberEditor : public Application {
    public:
@@ -18,6 +25,9 @@ class EmberEditor : public Application {
     void OnRender() override;
 
    private:
+    void DefineUI();
+
+    // UI controls
     bool value = false;
     bool leftMouseDown = false;
     double lastX = 0.0f;
@@ -27,9 +37,19 @@ class EmberEditor : public Application {
     float pitch = 0.0f;
     float mouseSensitivity = 0.1f;
     float movementSpeed = 1.0f;
+
+    // State Management
     ApplicationState state;
     FileSystem fs;
     std::vector<std::string> assets;
+    std::shared_ptr<RenderContext> context;
+    std::shared_ptr<FrameBuffer> scenebuffer;
+    UIEngine uiEngine;
+    std::vector<Mesh> meshes;
+
+    std::vector<Rc<ShaderProgram>> shaders;
+    GridRenderer m_GridRenderer;
+    Rc<ShaderProgram> m_GridShader;
 };
 
 #endif  // __EMBEREDITOR_H__

@@ -1,10 +1,10 @@
-#include "../../include/Core/IndexBuffer.h"
-#include "../../include/Core/Platform/OpenGL/OpenGLIndexBuffer.h"
-#include "../../include/Core/RenderAPI.h"
+#include "Core/IndexBuffer.h"
+#include "Core/Platform/OpenGL/OpenGLIndexBuffer.h"
+#include "Core/RenderAPI.h"
 
 std::shared_ptr<IndexBuffer> IndexBuffer::Create(const uint32* indices,
                                                  uint32 size) {
-    switch (RenderAPI::Get()) {
+    switch (RenderAPI::Get()){
         case GraphicsAPI::OpenGL:
             return std::make_shared<OpenGLIndexBuffer>(indices, size);
         // case GraphicsAPI::Vulkan:

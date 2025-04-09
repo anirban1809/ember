@@ -25,21 +25,25 @@ void OpenGLShaderProgram::Unbind() const { glUseProgram(0); }
 
 void OpenGLShaderProgram::SetUniformMat4(const std::string& name,
                                          const glm::mat4& value) {
-    glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+    GLint loc = GetUniformLocation(name);
+    if (loc != -1) glUniformMatrix4fv(loc, 1, GL_FALSE, &value[0][0]);
 }
 
 void OpenGLShaderProgram::SetUniformFloat(const std::string& name,
                                           float value) {
-    glUniform1f(GetUniformLocation(name), value);
+    GLint loc = GetUniformLocation(name);
+    if (loc != -1) glUniform1f(loc, value);
 }
 
 void OpenGLShaderProgram::SetUniformFloat3(const std::string& name,
                                            const glm::vec3& value) {
-    glUniform3f(GetUniformLocation(name), value.x, value.y, value.z);
+    GLint loc = GetUniformLocation(name);
+    if (loc != -1) glUniform3f(loc, value.x, value.y, value.z);
 }
 
 void OpenGLShaderProgram::SetUniformInt(const std::string& name, int32 value) {
-    glUniform1i(GetUniformLocation(name), value);
+    GLint loc = GetUniformLocation(name);
+    if (loc != -1) glUniform1i(loc, value);
 }
 
 int32 OpenGLShaderProgram::GetUniformLocation(const std::string& name) const {

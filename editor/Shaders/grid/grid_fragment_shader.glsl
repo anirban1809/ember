@@ -7,9 +7,9 @@ uniform mat4 invView;
 uniform mat4 invProjection;
 uniform vec3 cameraPos;
 
-const vec3 backgroundColor = vec3(0.761, 0.761, 0.761);  // Mint green
-const vec3 gridColor = vec3(0.3);                        // Black
-const vec3 axisColor = vec3(0.0);                        // Black
+const vec3 backgroundColor = vec3(0.761, 0.761, 0.761);
+const vec3 gridColor = vec3(0.3);  // Black
+const vec3 axisColor = vec3(0.0);  // Black
 
 // Grid spacing (snap to powers of 2)
 float getGridSpacing(float camHeight) {
