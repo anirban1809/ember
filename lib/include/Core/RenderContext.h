@@ -40,10 +40,12 @@ class RenderContext {
                         const VertexLayout& layout,
                         const glm::mat4& transform) = 0;
 
-    virtual void Submit(const Mesh& mesh) = 0;
+    virtual void SubmitMesh(const Mesh& mesh) = 0;
     virtual void SubmitArrays(std::shared_ptr<VertexArray> vao,
                               std::shared_ptr<ShaderProgram> shader,
                               uint32 vertexCount) = 0;
+    virtual void Submit(std::shared_ptr<VertexArray> vao,
+                        std::shared_ptr<ShaderProgram> shader) = 0;
 
     virtual void EndScene() = 0;
 

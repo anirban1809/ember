@@ -16,6 +16,11 @@ ${ASSIMP_INCLUDE_DIR}
 )
 
 include_directories("${CMAKE_SOURCE_DIR}/lib/include")
+include_directories(
+    ${CMAKE_SOURCE_DIR}/vendor
+    ${CMAKE_SOURCE_DIR}/vendor/glfw-3.4.bin.MACOS/include
+    ${CMAKE_SOURCE_DIR}/vendor/stb
+)
 
 target_link_libraries(
     release 

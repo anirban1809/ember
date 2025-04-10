@@ -14,10 +14,13 @@ class OpenGLRenderContext : public RenderContext {
     void Submit(const std::vector<float>& vertices,
                 const std::vector<uint32>& indices, const VertexLayout& layout,
                 const glm::mat4& transform) override;
-    void Submit(const Mesh& mesh) override;
+    void SubmitMesh(const Mesh& mesh) override;
     void SubmitArrays(std::shared_ptr<VertexArray> vao,
                       std::shared_ptr<ShaderProgram> shader,
                       uint32 vertexCount) override;
+
+    void Submit(std::shared_ptr<VertexArray> vao,
+                std::shared_ptr<ShaderProgram> shader) override;
     void EndScene() override;
     void Clear() override;
 

@@ -8,16 +8,27 @@
 #include <iostream>
 #include <memory>
 
-void OpenGLRenderContext::Submit(const Mesh& mesh) {
+void OpenGLRenderContext::SubmitMesh(const Mesh& mesh) {
     mesh.material->Apply();
 
     auto shader = mesh.material->GetShader();
     shader->SetUniformMat4("model", mesh.transform);
 
     mesh.vao->Bind();
+    glEnable(GL_DEPTH_TEST);
     glDrawElements(GL_TRIANGLES, mesh.ibo->GetCount(), GL_UNSIGNED_INT,
                    nullptr);
+    glDisable(GL_DEPTH_TEST);
     mesh.vao->Unbind();
+}
+
+void OpenGLRenderContext::Submit(std::shared_ptr<VertexArray> vao,
+                                 std::shared_ptr<ShaderProgram> shader) {
+    vao->Bind();
+    shader->Bind();
+
+    uint32 indexCount = vao->GetIndexBuffer()->GetCount();
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 }
 
 void OpenGLRenderContext::SubmitArrays(std::shared_ptr<VertexArray> vao,

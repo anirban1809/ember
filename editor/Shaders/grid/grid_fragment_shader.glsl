@@ -8,8 +8,8 @@ uniform mat4 invProjection;
 uniform vec3 cameraPos;
 
 const vec3 backgroundColor = vec3(0.761, 0.761, 0.761);
-const vec3 gridColor = vec3(0.3);  // Black
-const vec3 axisColor = vec3(0.0);  // Black
+const vec3 gridColor = vec3(1.0);  // Black
+const vec3 axisColor = vec3(1.0);  // Black
 
 // Grid spacing (snap to powers of 2)
 float getGridSpacing(float camHeight) {
@@ -75,5 +75,5 @@ void main() {
     vec3 color = mix(backgroundColor, gridColor, grid);
     color = mix(color, axisColor, axis);
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(color, 0.7);
 }

@@ -2,10 +2,13 @@
 #define __EMBEREDITOR_H__
 
 #include "Core/Application.h"
+#include "Core/Mesh.h"
 #include "Core/RenderContext.h"
 #include "Core/ShaderProgram.h"
 #include "UI/ApplicationState.h"
 #include "UI/GridRenderer.h"
+#include "UI/SkyboxRenderer.h"
+#include "UI/TextureCube.h"
 #include "UI/UIEngine.h"
 #include <memory>
 template <typename T>
@@ -23,6 +26,7 @@ class EmberEditor : public Application {
     void OnMouseMoved(double xpos, double ypos) override;
     void OnUpdate() override;
     void OnRender() override;
+    void AddMesh(Mesh&);
 
    private:
     void DefineUI();
@@ -49,7 +53,11 @@ class EmberEditor : public Application {
 
     std::vector<Rc<ShaderProgram>> shaders;
     GridRenderer m_GridRenderer;
+    SkyboxRenderer m_SkyboxRenderer;
+    Rc<ShaderProgram> m_SkyboxShader;
+    Rc<ShaderProgram> m_EquirectToCubemapShader;
     Rc<ShaderProgram> m_GridShader;
+    Rc<TextureCube> m_SkyboxCubemap;
 };
 
 #endif  // __EMBEREDITOR_H__

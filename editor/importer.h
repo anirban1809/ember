@@ -1,10 +1,16 @@
 #ifndef __IMPORTER_H__
 #define __IMPORTER_H__
 
+#include "Core/Material.h"
+#include "Core/Mesh.h"
+#include "Core/Types.h"
+#include "glm/fwd.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <exception>
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <unordered_map>
 
@@ -35,10 +41,11 @@ struct VertexHasher {
 
 class Importer {
    public:
-    static bool Load(
-        const std::string& path,
-        std::vector<float>& vertexBuffer,  // [x, y, z, u, v, nx, ny, nz]
-        std::vector<unsigned int>& indexBuffer) {
+    static Mesh Load(const std::string& path,
+                     std::shared_ptr<Material> material) {
+        std::vector<float> vertexBuffer;  // [x, y, z, u, v, nx, ny, nz]
+        std::vector<uint32> indexBuffer;
+
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(
             path,
@@ -48,7 +55,6 @@ class Importer {
             !scene->mRootNode) {
             std::cerr << "Assimp error: " << importer.GetErrorString()
                       << std::endl;
-            return false;
         }
 
         std::unordered_map<Vertex, unsigned int, VertexHasher> uniqueVertices;
@@ -92,7 +98,13 @@ class Importer {
             }
         }
 
-        return true;
+        return Mesh(vertexBuffer, indexBuffer,
+                    VertexLayout{
+                        {ShaderType::Float3, 0 * sizeof(float), 0},  // position
+                        {ShaderType::Float2, 3 * sizeof(float), 1},  // texcoord
+                        {ShaderType::Float3, 5 * sizeof(float), 2},  // normal
+                    },
+                    glm::mat4(1.0f), material);
     }
 };
 #endif  // __IMPORTER_H__

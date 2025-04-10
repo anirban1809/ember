@@ -3,6 +3,7 @@
 #include "Core/Events.h"
 #include "Core/Logger.h"
 #include "Core/Material.h"
+#include "Core/Mesh.h"
 #include "Core/ShaderProgram.h"
 #include "Core/Types.h"
 #include "Core/VertexLayout.h"
@@ -13,6 +14,7 @@
 #include "UI/ImGui/Panels/LoadObjectPanel.h"
 #include "UI/ImGui/Panels/NodePropsPanel.h"
 #include "UI/ImGui/Panels/ScenePropsPanel.h"
+#include "UI/TextureCube.h"
 #include "glm/ext/quaternion_common.hpp"
 #include "importer.h"
 #include <memory>
@@ -21,6 +23,8 @@ EmberEditor::EmberEditor(int width, int height, const char* title)
       state(fs, assets),
       uiEngine(std::make_unique<ImGuiLayer>(state)) {}
 
+void EmberEditor::AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
+
 void EmberEditor::OnInit() {
     Logger::Log(LOG_INFO, "Initializing Ember Engine 0.0.1");
     context = RenderContext::Create();
@@ -28,20 +32,20 @@ void EmberEditor::OnInit() {
     uiEngine.Init(window->GetGLFWWindow());
     DefineUI();
 
+    // 1. Create shader for skybox display
+    m_SkyboxShader = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
+        "skybox_vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
+        "skybox_fragment_shader.glsl");
+
+    // 3. Load equirectangular texture
+    m_SkyboxCubemap = TextureCube::CreateFromCrossLayout(
+        "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
+        "cubemap3.png");
+
     std::vector<float> model_vertices;
-
     std::vector<uint32> model_indices;
-
-    if (Importer::Load("/Users/anirban/Documents/Code/engine/editor/models/"
-                       "testscene.obj",
-                       model_vertices, model_indices)) {
-        std::cout << "Loaded mesh!" << std::endl;
-        std::cout << "Unique vertices: " << model_vertices.size() / 8
-                  << std::endl;
-        std::cout << "Indices: " << model_indices.size() << std::endl;
-    } else {
-        std::cerr << "Failed to load mesh." << std::endl;
-    }
 
     auto mainshader = ShaderProgram::Create(
         "/Users/anirban/Documents/Code/engine/editor/Shaders/"
@@ -70,15 +74,21 @@ void EmberEditor::OnInit() {
     light.SetColor(glm::vec3(1.0f));
     light.SetPosition(glm::vec3(0.0, 10.0, 0.0));
 
+    auto default_mesh = Importer::Load(
+        "/Users/anirban/Documents/Code/engine/editor/models/"
+        "testscene.obj",
+        material);
+
+    auto other_mesh = Importer::Load(
+        "/Users/anirban/Documents/Code/engine/editor/models/"
+        "Chair.obj",
+        material);
+
+    auto gun = Importer::Load(
+        "/Users/anirban/Documents/Code/engine/editor/models/m4colt.obj",
+        material);
     // Create mesh
-    meshes.emplace_back(
-        model_vertices, model_indices,
-        VertexLayout{
-            {ShaderType::Float3, 0 * sizeof(float), 0},  // position
-            {ShaderType::Float2, 3 * sizeof(float), 1},  // texcoord
-            {ShaderType::Float3, 5 * sizeof(float), 2},  // normal
-        },
-        glm::mat4(1.0f), material);
+    AddMesh(other_mesh);
 }
 
 void EmberEditor::OnUpdate() {}
@@ -104,9 +114,15 @@ void EmberEditor::OnRender() {
     scenebuffer->Bind();
     context->Clear();
     context->BeginScene(shaders);
+
+    // Render Cubemap
+    m_SkyboxRenderer.Render(context, m_SkyboxShader, m_SkyboxCubemap, camera);
+
+    // Render Grid
     m_GridRenderer.Render(context, m_GridShader, camera);
+
     for (auto& mesh : meshes) {
-        context->Submit(mesh);
+        context->SubmitMesh(mesh);
     }
     context->EndScene();
 

@@ -4,3 +4,4 @@ Makefile
 lib/CMakeFiles
 editor/CMakeFiles
 editor/models
+editor/Cubemaps
