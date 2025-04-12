@@ -29,34 +29,50 @@
 class RenderContext {
    public:
     /**
-     * @brief
+     * @brief Creates and returns a shared pointer to a new RenderContext
+     * instance.
      *
-     * @return std::shared_ptr<RenderContext>
+     * This static method is responsible for constructing a new RenderContext
+     * object and returning it as a shared pointer. The exact implementation
+     * details of the creation process depend on the underlying rendering
+     * system and configuration.
+     *
+     * @return std::shared_ptr<RenderContext> A shared pointer to the newly
+     * created RenderContext instance.
      */
     static std::shared_ptr<RenderContext> Create();
 
     /**
-     * @brief Destroy the Render Context object
+     * @brief Virtual destructor for the RenderContext class.
      *
+     * Ensures proper cleanup of resources in derived classes when a
+     * RenderContext object is destroyed. Declared as default to use the
+     * compiler-generated implementation.
      */
     virtual ~RenderContext() = default;
 
     /**
-     * @brief
+     * @brief Begins a new rendering scene.
      *
-     */
-    virtual void BeginScene(std::vector<std::shared_ptr<ShaderProgram>>&) = 0;
-
-    /**
-     * @brief Sets the global shaders to be used in the rendering context.
-     *
-     * This method allows the user to specify a collection of shader programs
-     * that will be globally applied within the rendering context. These shaders
-     * are typically used for rendering operations that require consistent
-     * shader configurations across multiple objects or scenes.
+     * This function initializes the rendering process for a new scene. It is
+     * expected to be called before any rendering commands are issued. The
+     * provided shaders will be used during the rendering of the scene.
      *
      * @param shaders A vector of shared pointers to ShaderProgram objects
-     *                representing the global shaders to be set.
+     *                that will be used for rendering the scene.
+     */
+    virtual void BeginScene(
+        std::vector<std::shared_ptr<ShaderProgram>>& shaders) = 0;
+
+    /**
+     * @brief Begins the rendering of a new scene.
+     *
+     * This method is responsible for initializing the rendering context
+     * for a new scene. It prepares the necessary resources and state
+     * required for rendering.
+     *
+     * @param shaders A vector of shared pointers to ShaderProgram objects
+     *                that will be used during the rendering of the scene.
      */
     virtual void SetGlobalShaders(
         const std::vector<std::shared_ptr<ShaderProgram>>&) = 0;
@@ -119,8 +135,23 @@ class RenderContext {
     virtual void Submit(std::shared_ptr<VertexArray> vao,
                         std::shared_ptr<ShaderProgram> shader) = 0;
 
+    /**
+     * @brief Ends the current rendering scene.
+     *
+     * This function finalizes the rendering operations for the current scene.
+     * It should be called after all rendering commands for the scene have been
+     * issued. Implementations may perform cleanup or present the rendered frame
+     * to the screen.
+     */
     virtual void EndScene() = 0;
 
+    /**
+     * @brief Clears the current render context.
+     *
+     * This function is responsible for resetting or clearing the rendering
+     * state, such as clearing the screen or buffer, to prepare for the next
+     * rendering operation. It must be implemented by derived classes.
+     */
     virtual void Clear() = 0;
 };
 #endif  // __RENDERCONTEXT_H__

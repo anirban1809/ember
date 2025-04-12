@@ -7,6 +7,8 @@
 #include "Core/ShaderProgram.h"
 #include "Core/Types.h"
 #include "Core/VertexLayout.h"
+#include "ECS/Entity.h"
+#include "ECS/Scene.h"
 #include "UI/ImGui/ImGuiLayer.h"
 #include "UI/ImGui/ImGuiLayoutContainer.h"
 #include "UI/ImGui/Panels/AssetLibraryPanel.h"
@@ -42,7 +44,7 @@ void Editor::OnInit() {
     // 3. Load equirectangular texture
     m_SkyboxCubemap = TextureCube::CreateFromCrossLayout(
         "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
-        "cubemap3.png");
+        "nightskycubemap.png");
 
     std::vector<float> model_vertices;
     std::vector<uint32> model_indices;
