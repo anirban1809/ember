@@ -1,24 +1,135 @@
+
 #include "Editor.h"
-
+#include "Core/Events.h"
+#include "Core/Logger.h"
+#include "Core/Material.h"
+#include "Core/Mesh.h"
+#include "Core/ShaderProgram.h"
 #include "Core/Types.h"
-#include "Core/Utils/MonitorUtils.h"
-#include "Core/RenderContext.h"
-#include "UI/ImGui/Panels/ScenePropsPanel.h"
-#include "UI/ImGui/Panels/NodePropsPanel.h"
-#include "UI/ImGui/Panels/FrameBufferPanel.h"
+#include "Core/VertexLayout.h"
+#include "UI/ImGui/ImGuiLayer.h"
+#include "UI/ImGui/ImGuiLayoutContainer.h"
 #include "UI/ImGui/Panels/AssetLibraryPanel.h"
+#include "UI/ImGui/Panels/FrameBufferPanel.h"
 #include "UI/ImGui/Panels/LoadObjectPanel.h"
+#include "UI/ImGui/Panels/NodePropsPanel.h"
+#include "UI/ImGui/Panels/ScenePropsPanel.h"
+#include "UI/TextureCube.h"
+#include "glm/ext/quaternion_common.hpp"
 #include "importer.h"
-
-#include <assimp/mesh.h>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
+#include <memory>
 Editor::Editor(int width, int height, const char* title)
     : Application(width, height, title),
       state(fs, assets),
       uiEngine(std::make_unique<ImGuiLayer>(state)) {}
+
+void Editor::AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
+
+void Editor::OnInit() {
+    Logger::Log(LOG_INFO, "Initializing Ember Engine 0.0.1");
+    context = RenderContext::Create();
+    scenebuffer = FrameBuffer::Create(1000.0f, 1000.0f);
+    uiEngine.Init(window->GetGLFWWindow());
+    DefineUI();
+
+    // 1. Create shader for skybox display
+    m_SkyboxShader = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
+        "skybox_vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
+        "skybox_fragment_shader.glsl");
+
+    // 3. Load equirectangular texture
+    m_SkyboxCubemap = TextureCube::CreateFromCrossLayout(
+        "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
+        "cubemap3.png");
+
+    std::vector<float> model_vertices;
+    std::vector<uint32> model_indices;
+
+    auto mainshader = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+        "vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+        "fragment_shader.glsl");
+
+    m_GridShader = ShaderProgram::Create(
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
+        "grid_vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
+        "grid_fragment_shader.glsl");
+
+    // Store shader in scene
+    shaders.push_back(mainshader);
+
+    // Set up material
+    auto material = std::make_shared<Material>(mainshader);
+
+    // Set up camera
+    camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
+    camera.SetCameraPosition(0.0f, 100.0f, 100.0f);
+    camera.SetCameraLook(0.0f, 0.0f, 0.0f);
+
+    // Set up light
+    light.SetColor(glm::vec3(1.0f));
+    light.SetPosition(glm::vec3(0.0, 10.0, 0.0));
+
+    auto default_mesh = Importer::Load(
+        "/Users/anirban/Documents/Code/engine/editor/models/"
+        "testscene.obj",
+        material);
+
+    auto other_mesh = Importer::Load(
+        "/Users/anirban/Documents/Code/engine/editor/models/"
+        "Chair.obj",
+        material);
+
+    auto gun = Importer::Load(
+        "/Users/anirban/Documents/Code/engine/editor/models/m4colt.obj",
+        material);
+    // Create mesh
+    AddMesh(other_mesh);
+}
+
+void Editor::OnUpdate() {}
+
+void Editor::OnRender() {
+    // Render ImGUI Panels
+    uiEngine.BeginFrame();
+    uiEngine.RenderPanels();
+    uiEngine.EndFrame();
+
+    // Set global uniforms on all shaders
+    for (auto& shader : shaders) {
+        shader->Bind();
+        shader->SetUniformFloat3("diffuseColor",
+                                 glm::vec3(1.0f, 1.0f, 1.0f));  // example color
+        shader->SetUniformMat4("view", camera.GetView());
+        shader->SetUniformMat4("projection", camera.GetProjection());
+        shader->SetUniformFloat3("viewPos", camera.GetCameraPosition());
+        shader->SetUniformFloat3("lightPos", light.GetPosition());
+        shader->SetUniformFloat3("lightColor", light.GetColor());
+    }
+
+    scenebuffer->Bind();
+    context->Clear();
+    context->BeginScene(shaders);
+
+    // Render Cubemap
+    m_SkyboxRenderer.Render(context, m_SkyboxShader, m_SkyboxCubemap, camera);
+
+    // Render Grid
+    m_GridRenderer.Render(context, m_GridShader, camera);
+
+    for (auto& mesh : meshes) {
+        context->SubmitMesh(mesh);
+    }
+    context->EndScene();
+
+    scenebuffer->Unbind();
+}
+
+//----------------------------UI Definition----------------------------//
 
 void Editor::DefineUI() {
     std::shared_ptr<ImGuiLayoutContainer> lc =
@@ -48,80 +159,7 @@ void Editor::DefineUI() {
     uiEngine.GetUIManager().AddPanel(CreatePanel<LoadObjectPanel>(state));
 }
 
-void Editor::OnInit() {
-    scenebuffer = FrameBuffer::Create(1000.0f, 1000.0f);
-    uiEngine.Init(window->GetGLFWWindow());
-    MonitorWorkArea area = MonitorUtils::GetPrimaryMonitorWorkArea();
-
-    // Step 3: Print it
-    std::cout << "Usable screen area: " << area.width << "x" << area.height
-              << " at position (" << area.x << ", " << area.y << ")"
-              << std::endl;
-
-    DefineUI();
-    state.fs = fs;
-
-    std::vector<float> vertexArray;
-    std::vector<uint32> indexArray;
-
-    if (Importer::Load("/Users/anirban/Documents/Code/engine/editor/models/"
-                       "testscene.obj",
-                       vertexArray, indexArray)) {
-        std::cout << "Loaded mesh!" << std::endl;
-        std::cout << "Unique vertices: " << vertexArray.size() / 8 << std::endl;
-        std::cout << "Indices: " << indexArray.size() << std::endl;
-    } else {
-        std::cerr << "Failed to load mesh." << std::endl;
-    }
-
-    Logger::Log(LOG_INFO, "Initializing Application");
-    Logger::Log(LOG_INFO, "Ember Engine Version: 0.0.3 (Apr '25)");
-
-    camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
-    camera.SetCameraPosition(0.0f, 100.0f, 100.0f);
-    camera.SetCameraLook(0.0f, 0.0f, 0.0f);
-
-    std::shared_ptr<RenderContext> context = RenderContext::Create();
-    std::shared_ptr<ShaderProgram> mainShader = ShaderProgram::Create(
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-        "vertex_shader.glsl",
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-        "fragment_shader.glsl");
-
-    auto grid = ShaderProgram::Create(
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
-        "grid_vertex_shader.glsl",
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
-        "grid_fragment_shader.glsl");
-
-    std::vector<std::shared_ptr<ShaderProgram>> shaders;
-    shaders.push_back(mainShader);
-    context->BeginScene(shaders);
-
-    shader = new Shader(
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-        "vertex_shader.glsl",
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-        "fragment_shader.glsl");
-
-    Shader* gridShader = new Shader(
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
-        "grid_vertex_shader.glsl",
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
-        "grid_fragment_shader.glsl");
-
-    container = new VertexContainer(shader, gridShader);
-
-    container->Init(vertexArray, indexArray, shader->GetProgramId());
-    container->InitGrid();
-    container->Bind();
-
-    light.SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-    light.SetPosition(glm::vec3(0.0, 100.0, 0.0));
-
-    container->AttachCamera(&camera);
-    container->AttachLight(&light);
-}
+//-------------------------Input Handling--------------------------------//
 
 void Editor::OnKeyPressed(int key) {
     // Retrieve current camera position and look target.
@@ -231,21 +269,4 @@ void Editor::OnMouseMoved(double xpos, double ypos) {
     // (Camera look = camera position + front vector)
     glm::vec3 newLook = camera.GetCameraPosition() + front;
     camera.SetCameraLook(newLook.x, newLook.y, newLook.z);
-}
-
-void Editor::OnUpdate() {}
-
-void Editor::OnRender() {
-    scenebuffer->Bind();
-    scenebuffer->Clear();
-
-    container->Bind();
-    container->Draw(shader->GetProgramId());
-    container->Unbind();
-
-    scenebuffer->Unbind();
-
-    uiEngine.BeginFrame();
-    uiEngine.RenderPanels();
-    uiEngine.EndFrame();
 }
