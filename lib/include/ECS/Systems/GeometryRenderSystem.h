@@ -6,8 +6,5 @@
 #include <memory>
 class GeometryRenderSystem : public System {
    public:
-    void Init(Scene&) override;
-    void Update(Scene&) override;
-    std::string GetName() const override;
 };
 #endif  // __RENDERSYSTEM_H__

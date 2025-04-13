@@ -6,7 +6,8 @@
 class Scene;
 class Entity {
    public:
-    Entity(uint32, Scene*);
+    Entity() {}
+    inline Entity(uint32 id, Scene* scene) : entityId(id), scene(scene) {}
     inline uint32 GetId() { return entityId; }
 
     template <typename T, typename... Args>
@@ -25,4 +26,5 @@ class Entity {
     uint64 entityId;
     Scene* scene;
 };
+
 #endif  // __ENTITY_H__

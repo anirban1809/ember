@@ -3,12 +3,5 @@
 
 #include "ECS/Scene.h"
 #include <string>
-class System {
-   public:
-    virtual ~System() = default;
-
-    virtual void Init(Scene&) = 0;
-    virtual void Update(Scene&) = 0;
-    virtual std::string GetName() const = 0;
-};
+class System {};
 #endif  // __SYSTEM_H__

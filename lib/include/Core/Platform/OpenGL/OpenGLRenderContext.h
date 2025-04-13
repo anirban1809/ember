@@ -8,7 +8,7 @@
 
 class OpenGLRenderContext : public RenderContext {
    public:
-    void BeginScene(std::vector<std::shared_ptr<ShaderProgram>>&) override;
+    void BeginScene() override;
     void SetGlobalShaders(
         const std::vector<std::shared_ptr<ShaderProgram>>&) override;
     void Submit(const std::vector<float>& vertices,

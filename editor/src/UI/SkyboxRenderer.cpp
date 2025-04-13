@@ -1,5 +1,4 @@
 #include "UI/SkyboxRenderer.h"
-#include "Core/FrameBuffer.h"
 #include "UI/TextureCube.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
@@ -32,18 +31,14 @@ void SkyboxRenderer::InitCube() {
         -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f,
         -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f};
 
-    indexCount = 36;
-
     VertexLayout layout = {{ShaderType::Float3, 0, 0}};
 
     auto vbo = VertexBuffer::Create(
         vertices.data(), vertices.size() * sizeof(float), layout.GetStride());
-    // auto ibo = IndexBuffer::Create(indices.data(), indices.size());
 
     vao = VertexArray::Create();
     vao->AddVertexBuffer(vbo);
     vao->SetVertexLayout(layout);
-    // vao->SetIndexBuffer(ibo);
 }
 
 void SkyboxRenderer::Render(std::shared_ptr<RenderContext> context,
@@ -62,5 +57,5 @@ void SkyboxRenderer::Render(std::shared_ptr<RenderContext> context,
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    context->SubmitArrays(vao, shader, indexCount);
+    context->SubmitArrays(vao, shader, 36);
 }

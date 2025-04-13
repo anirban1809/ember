@@ -40,13 +40,7 @@ void OpenGLRenderContext::SubmitArrays(std::shared_ptr<VertexArray> vao,
     vao->Unbind();
 }
 
-void OpenGLRenderContext::BeginScene(
-    std::vector<std::shared_ptr<ShaderProgram>>& shaders) {
-    SetGlobalShaders(shaders);
-    for (auto const& shader : shaders) {
-        shader->Bind();
-    }
-
+void OpenGLRenderContext::BeginScene() {
     glEnable(GL_CULL_FACE);
     // Cull back faces
     glCullFace(GL_BACK);

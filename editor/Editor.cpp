@@ -4,11 +4,16 @@
 #include "Core/Logger.h"
 #include "Core/Material.h"
 #include "Core/Mesh.h"
+#include "Core/RenderContext.h"
 #include "Core/ShaderProgram.h"
+#include "Core/ShaderRegistry.h"
 #include "Core/Types.h"
 #include "Core/VertexLayout.h"
+#include "ECS/Components/CameraComponent.h"
+#include "ECS/Components/SkyboxComponent.h"
 #include "ECS/Entity.h"
 #include "ECS/Scene.h"
+#include "ECS/Systems/SkyboxSystem.h"
 #include "UI/ImGui/ImGuiLayer.h"
 #include "UI/ImGui/ImGuiLayoutContainer.h"
 #include "UI/ImGui/Panels/AssetLibraryPanel.h"
@@ -17,55 +22,79 @@
 #include "UI/ImGui/Panels/NodePropsPanel.h"
 #include "UI/ImGui/Panels/ScenePropsPanel.h"
 #include "UI/TextureCube.h"
-#include "glm/ext/quaternion_common.hpp"
+#include "glm/fwd.hpp"
 #include "importer.h"
 #include <memory>
 Editor::Editor(int width, int height, const char* title)
     : Application(width, height, title),
       state(fs, assets),
-      uiEngine(std::make_unique<ImGuiLayer>(state)) {}
+      uiEngine(std::make_unique<ImGuiLayer>(state)),
+      context(RenderContext::Create()),
+      m_SkyboxSystem(context),
+      m_GridSystem(context) {}
 
 void Editor::AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
 
 void Editor::OnInit() {
     Logger::Log(LOG_INFO, "Initializing Ember Engine 0.0.1");
-    context = RenderContext::Create();
     scenebuffer = FrameBuffer::Create(1000.0f, 1000.0f);
     uiEngine.Init(window->GetGLFWWindow());
     DefineUI();
 
-    // 1. Create shader for skybox display
-    m_SkyboxShader = ShaderProgram::Create(
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
-        "skybox_vertex_shader.glsl",
-        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
-        "skybox_fragment_shader.glsl");
-
-    // 3. Load equirectangular texture
-    m_SkyboxCubemap = TextureCube::CreateFromCrossLayout(
-        "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
-        "nightskycubemap.png");
-
-    std::vector<float> model_vertices;
-    std::vector<uint32> model_indices;
-
-    auto mainshader = ShaderProgram::Create(
+    ShaderRegistry::AddShader(
+        "main",
         "/Users/anirban/Documents/Code/engine/editor/Shaders/"
         "vertex_shader.glsl",
         "/Users/anirban/Documents/Code/engine/editor/Shaders/"
         "fragment_shader.glsl");
 
-    m_GridShader = ShaderProgram::Create(
+    ShaderRegistry::AddShader(
+        "skybox",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
+        "skybox_vertex_shader.glsl",
+        "/Users/anirban/Documents/Code/engine/editor/Shaders/skybox/"
+        "skybox_fragment_shader.glsl");
+
+    ShaderRegistry::AddShader(
+        "grid",
         "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
         "grid_vertex_shader.glsl",
         "/Users/anirban/Documents/Code/engine/editor/Shaders/grid/"
         "grid_fragment_shader.glsl");
 
+    Entity skybox = scene.CreateEntity("skybox");
+    m_MainCameraEntity = scene.CreateEntity("main_camera");
+
+    scene.AddComponent<SkyboxComponent>(
+        skybox, TextureCube::CreateFromCrossLayout(
+                    "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
+                    "plainscubemap.png"));
+
+    scene.AddComponent<CameraComponent>(
+        m_MainCameraEntity, glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0.0f),
+        glm::vec4(45.0f, 1.0f, 0.1f, 1000.0f));
+
+    m_SkyboxSystem.Init(scene);
+
+    // m_SkyboxCubemap = TextureCube::CreateFromCrossLayout(
+    //     "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
+    //     "plainscubemap.png");
+
+    std::vector<float> model_vertices;
+    std::vector<uint32> model_indices;
+
+    // auto mainshader = ShaderProgram::Create(
+    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+    //     "vertex_shader.glsl",
+    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
+    //     "fragment_shader.glsl");
+
     // Store shader in scene
-    shaders.push_back(mainshader);
+    // shaders.push_back(ShaderRegistry::GetShader("main"));
 
     // Set up material
-    auto material = std::make_shared<Material>(mainshader);
+    auto material =
+        std::make_shared<Material>(ShaderRegistry::GetShader("main"));
 
     // Set up camera
     camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
@@ -90,7 +119,7 @@ void Editor::OnInit() {
         "/Users/anirban/Documents/Code/engine/editor/models/m4colt.obj",
         material);
     // Create mesh
-    AddMesh(other_mesh);
+    AddMesh(default_mesh);
 }
 
 void Editor::OnUpdate() {}
@@ -102,26 +131,33 @@ void Editor::OnRender() {
     uiEngine.EndFrame();
 
     // Set global uniforms on all shaders
-    for (auto& shader : shaders) {
-        shader->Bind();
-        shader->SetUniformFloat3("diffuseColor",
-                                 glm::vec3(1.0f, 1.0f, 1.0f));  // example color
-        shader->SetUniformMat4("view", camera.GetView());
-        shader->SetUniformMat4("projection", camera.GetProjection());
-        shader->SetUniformFloat3("viewPos", camera.GetCameraPosition());
-        shader->SetUniformFloat3("lightPos", light.GetPosition());
-        shader->SetUniformFloat3("lightColor", light.GetColor());
-    }
+
+    auto shader = ShaderRegistry::GetShader("main");
+    shader->Bind();
+    shader->SetUniformFloat3("diffuseColor",
+                             glm::vec3(1.0f, 1.0f, 1.0f));  // example color
+    shader->SetUniformMat4("view", camera.GetView());
+    shader->SetUniformMat4("projection", camera.GetProjection());
+    shader->SetUniformFloat3("viewPos", camera.GetCameraPosition());
+    shader->SetUniformFloat3("lightPos", light.GetPosition());
+    shader->SetUniformFloat3("lightColor", light.GetColor());
 
     scenebuffer->Bind();
     context->Clear();
-    context->BeginScene(shaders);
+    context->BeginScene();
 
     // Render Cubemap
-    m_SkyboxRenderer.Render(context, m_SkyboxShader, m_SkyboxCubemap, camera);
+    // m_SkyboxRenderer.Render(context, ShaderRegistry::GetShader("skybox"),
+    //                         m_SkyboxCubemap, camera);
+
+    m_CameraSystem.UpdateView(scene);
+    m_SkyboxSystem.Render(scene);
 
     // Render Grid
-    m_GridRenderer.Render(context, m_GridShader, camera);
+    // m_GridRenderer.Render(context, ShaderRegistry::GetShader("grid"),
+    // camera);
+
+    m_GridSystem.Render(scene);
 
     for (auto& mesh : meshes) {
         context->SubmitMesh(mesh);
@@ -148,7 +184,6 @@ void Editor::DefineUI() {
 
     lc1->AddElement(CreatePanel<ScenePropsPanel>(state), 1);
     lc1->AddElement(CreatePanel<AssetLibraryPanel>(state), 1);
-
     lc2->AddElement(CreatePanel<FramebufferPanel>("Scene", state, scenebuffer),
                     1);
     lc3->AddElement(CreatePanel<NodePropsPanel>(state), 1);
@@ -168,6 +203,9 @@ void Editor::OnKeyPressed(int key) {
     glm::vec3 position = camera.GetCameraPosition();
     glm::vec3 look = camera.GetCameraLook();
 
+    auto& cameraComponent =
+        scene.GetComponent<CameraComponent>(m_MainCameraEntity);
+
     // Calculate forward vector (direction the camera is facing)
     glm::vec3 forward = glm::normalize(look - position);
     // Compute right vector from forward and world up vector.
@@ -181,6 +219,11 @@ void Editor::OnKeyPressed(int key) {
                                  position.z + delta.z);
         camera.SetCameraLook(look.x + delta.x, look.y + delta.y,
                              look.z + delta.z);
+
+        cameraComponent.cameraPosition = glm::vec3(
+            position.x + delta.x, position.y + delta.y, position.z + delta.z);
+        cameraComponent.cameraLook =
+            glm::vec3(look.x + delta.x, look.y + delta.y, look.z + delta.z);
     }
     if (key == KeyEvent::KEY_S) {
         glm::vec3 delta = forward * movementSpeed;
@@ -188,6 +231,11 @@ void Editor::OnKeyPressed(int key) {
                                  position.z - delta.z);
         camera.SetCameraLook(look.x - delta.x, look.y - delta.y,
                              look.z - delta.z);
+
+        cameraComponent.cameraPosition = glm::vec3(
+            position.x - delta.x, position.y - delta.y, position.z - delta.z);
+        cameraComponent.cameraLook =
+            glm::vec3(look.x - delta.x, look.y - delta.y, look.z - delta.z);
     }
 
     if (key == KeyEvent::KEY_A) {
@@ -196,6 +244,11 @@ void Editor::OnKeyPressed(int key) {
                                  position.z - delta.z);
         camera.SetCameraLook(look.x - delta.x, look.y - delta.y,
                              look.z - delta.z);
+
+        cameraComponent.cameraPosition = glm::vec3(
+            position.x - delta.x, position.y - delta.y, position.z - delta.z);
+        cameraComponent.cameraLook =
+            glm::vec3(look.x - delta.x, look.y - delta.y, look.z - delta.z);
     }
 
     if (key == KeyEvent::KEY_D) {
@@ -204,6 +257,11 @@ void Editor::OnKeyPressed(int key) {
                                  position.z + delta.z);
         camera.SetCameraLook(look.x + delta.x, look.y + delta.y,
                              look.z + delta.z);
+
+        cameraComponent.cameraPosition = glm::vec3(
+            position.x + delta.x, position.y + delta.y, position.z + delta.z);
+        cameraComponent.cameraLook =
+            glm::vec3(look.x + delta.x, look.y + delta.y, look.z + delta.z);
     }
 }
 
@@ -271,4 +329,7 @@ void Editor::OnMouseMoved(double xpos, double ypos) {
     // (Camera look = camera position + front vector)
     glm::vec3 newLook = camera.GetCameraPosition() + front;
     camera.SetCameraLook(newLook.x, newLook.y, newLook.z);
+    auto& cameraComponent =
+        scene.GetComponent<CameraComponent>(m_MainCameraEntity);
+    cameraComponent.cameraLook = glm::vec3(newLook.x, newLook.y, newLook.z);
 }

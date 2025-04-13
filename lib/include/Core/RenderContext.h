@@ -61,8 +61,7 @@ class RenderContext {
      * @param shaders A vector of shared pointers to ShaderProgram objects
      *                that will be used for rendering the scene.
      */
-    virtual void BeginScene(
-        std::vector<std::shared_ptr<ShaderProgram>>& shaders) = 0;
+    virtual void BeginScene() = 0;
 
     /**
      * @brief Begins the rendering of a new scene.

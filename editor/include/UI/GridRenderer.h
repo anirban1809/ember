@@ -15,8 +15,6 @@ class GridRenderer {
                 const glm::vec3& gridColor = glm::vec3(0.3f));
 
    private:
-    std::shared_ptr<Material> material;
     std::shared_ptr<VertexArray> vao;
-
     void InitFullscreenTriangle();
 };

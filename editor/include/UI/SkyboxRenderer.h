@@ -18,8 +18,6 @@ class SkyboxRenderer {
    private:
     void InitCube();
     std::shared_ptr<VertexArray> vao;
-    std::shared_ptr<FrameBuffer> framebuffer;
-    uint32 indexCount = 0;
 };
 
 #endif  // __SKYBOXRENDERER_H__

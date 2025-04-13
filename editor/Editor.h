@@ -5,6 +5,11 @@
 #include "Core/Mesh.h"
 #include "Core/RenderContext.h"
 #include "Core/ShaderProgram.h"
+#include "Core/ShaderRegistry.h"
+#include "ECS/Entity.h"
+#include "ECS/Systems/CameraSystem.h"
+#include "ECS/Systems/GridSystem.h"
+#include "ECS/Systems/SkyboxSystem.h"
 #include "UI/ApplicationState.h"
 #include "UI/GridRenderer.h"
 #include "UI/SkyboxRenderer.h"
@@ -54,10 +59,12 @@ class Editor : public Application {
     std::vector<Rc<ShaderProgram>> shaders;
     GridRenderer m_GridRenderer;
     SkyboxRenderer m_SkyboxRenderer;
-    Rc<ShaderProgram> m_SkyboxShader;
-    Rc<ShaderProgram> m_EquirectToCubemapShader;
-    Rc<ShaderProgram> m_GridShader;
     Rc<TextureCube> m_SkyboxCubemap;
+    SkyboxSystem m_SkyboxSystem;
+    CameraSystem m_CameraSystem;
+    GridSystem m_GridSystem;
+    Entity m_MainCameraEntity;
+    Scene scene;
 };
 
 #endif  // __EMBEREDITOR_H__
