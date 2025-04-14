@@ -14,6 +14,9 @@ class Entity {
     T& AddComponent(Args&&... args);
 
     template <typename T>
+    T& AddComponent(T&);
+
+    template <typename T>
     T& GetComponent();
 
     template <typename T>

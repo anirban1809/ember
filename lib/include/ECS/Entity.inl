@@ -7,6 +7,11 @@ T& Entity::AddComponent(Args&&... args) {
 }
 
 template <typename T>
+T& Entity::AddComponent(T& component) {
+    return scene->AddComponent<T>(*this, component);
+}
+
+template <typename T>
 T& Entity::GetComponent() {
     return scene->GetComponent<T>(*this);
 }

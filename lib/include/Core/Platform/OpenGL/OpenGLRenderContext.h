@@ -4,6 +4,7 @@
 #include "../../RenderContext.h"
 #include "../../VertexArray.h"
 #include "Core/ShaderProgram.h"
+#include "ECS/Components/MeshComponent.h"
 #include <memory>
 
 class OpenGLRenderContext : public RenderContext {
@@ -19,8 +20,10 @@ class OpenGLRenderContext : public RenderContext {
                       std::shared_ptr<ShaderProgram> shader,
                       uint32 vertexCount) override;
 
-    void Submit(std::shared_ptr<VertexArray> vao,
-                std::shared_ptr<ShaderProgram> shader) override;
+    void SubmitMesh(MeshComponent&) override;
+
+    void SubmitElements(std::shared_ptr<VertexArray> vao,
+                        std::shared_ptr<ShaderProgram> shader) override;
     void EndScene() override;
     void Clear() override;
 

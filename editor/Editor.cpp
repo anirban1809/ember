@@ -10,6 +10,7 @@
 #include "Core/Types.h"
 #include "Core/VertexLayout.h"
 #include "ECS/Components/CameraComponent.h"
+#include "ECS/Components/MeshComponent.h"
 #include "ECS/Components/SkyboxComponent.h"
 #include "ECS/Entity.h"
 #include "ECS/Scene.h"
@@ -31,7 +32,8 @@ Editor::Editor(int width, int height, const char* title)
       uiEngine(std::make_unique<ImGuiLayer>(state)),
       context(RenderContext::Create()),
       m_SkyboxSystem(context),
-      m_GridSystem(context) {}
+      m_GridSystem(context),
+      m_MeshSystem(context) {}
 
 void Editor::AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
 
@@ -76,25 +78,8 @@ void Editor::OnInit() {
 
     m_SkyboxSystem.Init(scene);
 
-    // m_SkyboxCubemap = TextureCube::CreateFromCrossLayout(
-    //     "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
-    //     "plainscubemap.png");
-
     std::vector<float> model_vertices;
     std::vector<uint32> model_indices;
-
-    // auto mainshader = ShaderProgram::Create(
-    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-    //     "vertex_shader.glsl",
-    //     "/Users/anirban/Documents/Code/engine/editor/Shaders/"
-    //     "fragment_shader.glsl");
-
-    // Store shader in scene
-    // shaders.push_back(ShaderRegistry::GetShader("main"));
-
-    // Set up material
-    auto material =
-        std::make_shared<Material>(ShaderRegistry::GetShader("main"));
 
     // Set up camera
     camera.SetCameraProjection(45.0f, 1.0f, 0.1f, 1000.0f);
@@ -105,21 +90,15 @@ void Editor::OnInit() {
     light.SetColor(glm::vec3(1.0f));
     light.SetPosition(glm::vec3(0.0, 10.0, 0.0));
 
-    auto default_mesh = Importer::Load(
+    Entity e = scene.CreateEntity("default_mesh");
+    e.AddComponent<MeshComponent>(Importer::LoadMeshComponent(
         "/Users/anirban/Documents/Code/engine/editor/models/"
-        "testscene.obj",
-        material);
+        "testscene.obj"));
 
-    auto other_mesh = Importer::Load(
+    Entity e2 = scene.CreateEntity("default_mesh2");
+    e2.AddComponent<MeshComponent>(Importer::LoadMeshComponent(
         "/Users/anirban/Documents/Code/engine/editor/models/"
-        "Chair.obj",
-        material);
-
-    auto gun = Importer::Load(
-        "/Users/anirban/Documents/Code/engine/editor/models/m4colt.obj",
-        material);
-    // Create mesh
-    AddMesh(default_mesh);
+        "Chair.obj"));
 }
 
 void Editor::OnUpdate() {}
@@ -130,40 +109,24 @@ void Editor::OnRender() {
     uiEngine.RenderPanels();
     uiEngine.EndFrame();
 
-    // Set global uniforms on all shaders
-
-    auto shader = ShaderRegistry::GetShader("main");
-    shader->Bind();
-    shader->SetUniformFloat3("diffuseColor",
-                             glm::vec3(1.0f, 1.0f, 1.0f));  // example color
-    shader->SetUniformMat4("view", camera.GetView());
-    shader->SetUniformMat4("projection", camera.GetProjection());
-    shader->SetUniformFloat3("viewPos", camera.GetCameraPosition());
-    shader->SetUniformFloat3("lightPos", light.GetPosition());
-    shader->SetUniformFloat3("lightColor", light.GetColor());
-
+    // bind scenebuffer
     scenebuffer->Bind();
+
+    // clear rendercontext
     context->Clear();
+
+    m_MeshSystem.Init(scene);
+
     context->BeginScene();
-
-    // Render Cubemap
-    // m_SkyboxRenderer.Render(context, ShaderRegistry::GetShader("skybox"),
-    //                         m_SkyboxCubemap, camera);
-
-    m_CameraSystem.UpdateView(scene);
-    m_SkyboxSystem.Render(scene);
-
-    // Render Grid
-    // m_GridRenderer.Render(context, ShaderRegistry::GetShader("grid"),
-    // camera);
-
-    m_GridSystem.Render(scene);
-
-    for (auto& mesh : meshes) {
-        context->SubmitMesh(mesh);
+    {
+        m_CameraSystem.UpdateView(scene);
+        m_SkyboxSystem.Render(scene);
+        m_GridSystem.Render(scene);
+        m_MeshSystem.Render(scene);
     }
     context->EndScene();
 
+    // unbind scenebuffer
     scenebuffer->Unbind();
 }
 

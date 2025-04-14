@@ -1,6 +1,7 @@
 #ifndef __RENDERCONTEXT_H__
 #define __RENDERCONTEXT_H__
 
+#include "ECS/Components/MeshComponent.h"
 #include "ShaderProgram.h"
 #include "VertexLayout.h"
 #include "Mesh.h"
@@ -131,8 +132,10 @@ class RenderContext {
      * @param shader A shared pointer to the ShaderProgram object to be used for
      * rendering.
      */
-    virtual void Submit(std::shared_ptr<VertexArray> vao,
-                        std::shared_ptr<ShaderProgram> shader) = 0;
+    virtual void SubmitElements(std::shared_ptr<VertexArray> vao,
+                                std::shared_ptr<ShaderProgram> shader) = 0;
+
+    virtual void SubmitMesh(MeshComponent&) = 0;
 
     /**
      * @brief Ends the current rendering scene.

@@ -7,8 +7,10 @@
 #include "Core/ShaderProgram.h"
 #include "Core/ShaderRegistry.h"
 #include "ECS/Entity.h"
+#include "ECS/Entity.inl"
 #include "ECS/Systems/CameraSystem.h"
 #include "ECS/Systems/GridSystem.h"
+#include "ECS/Systems/MeshSystem.h"
 #include "ECS/Systems/SkyboxSystem.h"
 #include "UI/ApplicationState.h"
 #include "UI/GridRenderer.h"
@@ -63,6 +65,7 @@ class Editor : public Application {
     SkyboxSystem m_SkyboxSystem;
     CameraSystem m_CameraSystem;
     GridSystem m_GridSystem;
+    MeshSystem m_MeshSystem;
     Entity m_MainCameraEntity;
     Scene scene;
 };

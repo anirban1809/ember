@@ -18,16 +18,6 @@ void Material::SetInt(const std::string& name, int32 value) {
     intUniforms.emplace_back(name, value);
 }
 
-void Material::Apply() {
-    shader->Bind();
-    for (const auto& [name, val] : floatUniforms)
-        shader->SetUniformFloat(name, val);
-    for (const auto& [name, val] : float3Uniforms)
-        shader->SetUniformFloat3(name, val);
-    for (const auto& [name, val] : mat4Uniforms)
-        shader->SetUniformMat4(name, val);
-    for (const auto& [name, val] : intUniforms)
-        shader->SetUniformInt(name, val);
-}
+void Material::Apply() { shader->Bind(); }
 
 std::shared_ptr<ShaderProgram> Material::GetShader() const { return shader; }

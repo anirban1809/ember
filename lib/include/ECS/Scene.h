@@ -45,6 +45,17 @@ class Scene {
     }
 
     template <typename T>
+    T& AddComponent(Entity entity, std::shared_ptr<T> component) {
+        std::type_index type = typeid(T);
+        std::unordered_map<uint64, std::shared_ptr<Component>>& component_map =
+            components[type];
+
+        component_map[entity.GetId()] = component;
+
+        return *static_cast<T*>(component_map[entity.GetId()].get());
+    }
+
+    template <typename T>
     T& GetComponent(Entity entity) {
         std::type_index type = std::type_index(typeid(T));
         auto poolIt = components.find(type);
