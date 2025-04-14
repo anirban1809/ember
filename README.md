@@ -10,14 +10,14 @@ Ember currently is in very initial stages of development and is not in a state o
  - Cubemaps
  - Perspective Camera
  - Point lighting
+ - Entity Component System
+ - Loading multiple static meshes
 
 ### In Development
 The following features are currently under development
 
- - Loading multiple meshes
  - Material systems
  - Multiple Scene lighting
- - Entity Component System
 
 ### Building and running Ember
 Build dependencies are only available for mac os as I am using a mac to develop this. Support for Visual Studio solutions and Windows builds will be added soon.
