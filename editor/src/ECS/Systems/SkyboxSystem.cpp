@@ -10,13 +10,6 @@
 #include "GL/glew.h"
 
 void SkyboxSystem::Init(Scene& scene) {
-    for (Entity e : scene.View<SkyboxComponent>()) {
-        auto& component = e.GetComponent<SkyboxComponent>();
-        component.texture = TextureCube::CreateFromCrossLayout(
-            "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
-            "plainscubemap.png");
-    }
-
     std::vector<float> vertices = {
         // Back face
         -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,

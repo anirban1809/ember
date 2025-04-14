@@ -4,7 +4,7 @@
 #include "ECS/Component.h"
 #include "glm/glm.hpp"
 
-class LightComponent : public Component {
+struct LightComponent : public Component {
    public:
     glm::vec3 lightPosition;
     glm::vec3 lightColor;

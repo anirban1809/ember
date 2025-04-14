@@ -22,11 +22,6 @@ void MeshSystem::Init(Scene& scene) {
     shader->SetUniformMat4("view", camera->view);
     shader->SetUniformMat4("projection", camera->projection);
     shader->SetUniformFloat3("viewPos", camera->cameraPosition);
-    // shader->SetUniformFloat3("lightPos", light.GetPosition());
-    // shader->SetUniformFloat3("lightColor", light.GetColor());
-
-    shader->SetUniformFloat3("lightPos", glm::vec3(1.0f));
-    shader->SetUniformFloat3("lightColor", glm::vec3(1.0f));
 }
 
 void MeshSystem::Render(Scene& scene) {

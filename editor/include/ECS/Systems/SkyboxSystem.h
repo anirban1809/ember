@@ -6,6 +6,7 @@
 #include "Core/VertexArray.h"
 #include "ECS/System.h"
 #include <memory>
+#include <string>
 class SkyboxSystem : public System {
    public:
     SkyboxSystem(std::shared_ptr<RenderContext> context)

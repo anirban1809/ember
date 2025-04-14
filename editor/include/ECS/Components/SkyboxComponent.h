@@ -7,7 +7,8 @@
 
 struct SkyboxComponent : public Component {
     std::shared_ptr<TextureCube> texture;
-    SkyboxComponent(const std::shared_ptr<TextureCube>& texture)
-        : texture(texture) {}
+    SkyboxComponent(const std::string& path) {
+        texture = TextureCube::CreateFromCrossLayout(path);
+    }
 };
 #endif  // __SKYBOXCOMPONENT_H__

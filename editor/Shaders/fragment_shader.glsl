@@ -31,15 +31,5 @@ void main() {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
     vec3 specular = spec * specularColor * lightColor;
 
-    // Sample the texture
-    // vec4 texColor = texture(texture1, TexCoord);
-
-    // Multiply the texture color by the diffuse lighting:
     FragColor = vec4(diffuse + specular, 1.0);
-    // FragColor = vec4(1.0f)
-    // FragColor = vec4(norm * 0.5 + 0.5, 1.0);
-
-    // // Debug: Visualize normals as colors.
-    // vec3 norm = normalize(Normal);
-    // FragColor = vec4(norm * 0.5 + 0.5, 1.0);
 }

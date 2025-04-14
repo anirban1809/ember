@@ -22,8 +22,6 @@ class Application {
     virtual void OnMousePressed(int button) {}
     virtual void OnMouseReleased(int button) {}
     virtual void OnMouseMoved(double xpos, double ypos) {}
-    Camera camera;
-    Light light;
     Window *window;
     FrameBuffer *sceneBuffer;
     bool IsSceneClicked;
