@@ -15,6 +15,7 @@
 #include "ECS/Systems/SkyboxSystem.h"
 #include "UI/ApplicationState.h"
 #include "UI/GridRenderer.h"
+#include "UI/SceneManager.h"
 #include "UI/SkyboxRenderer.h"
 #include "UI/TextureCube.h"
 #include "UI/UIEngine.h"
@@ -34,12 +35,11 @@ class Editor : public Application {
     void OnMouseMoved(double xpos, double ypos) override;
     void OnUpdate() override;
     void OnRender() override;
-    void AddMesh(Mesh&);
 
    private:
     void DefineUI();
 
-    // UI controls
+    // UI control settings
     bool value = false;
     bool leftMouseDown = false;
     double lastX = 0.0f;
@@ -52,17 +52,12 @@ class Editor : public Application {
 
     // State Management
     ApplicationState state;
+    SceneManager m_SceneManager;
     FileSystem fs;
     std::vector<std::string> assets;
     std::shared_ptr<RenderContext> context;
     std::shared_ptr<FrameBuffer> scenebuffer;
     UIEngine uiEngine;
-    std::vector<Mesh> meshes;
-
-    std::vector<Rc<ShaderProgram>> shaders;
-    GridRenderer m_GridRenderer;
-    SkyboxRenderer m_SkyboxRenderer;
-    Rc<TextureCube> m_SkyboxCubemap;
 
     // systems
     SkyboxSystem m_SkyboxSystem;

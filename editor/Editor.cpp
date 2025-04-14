@@ -27,6 +27,7 @@
 #include "glm/fwd.hpp"
 #include "importer.h"
 #include <memory>
+
 Editor::Editor(int width, int height, const char* title)
     : Application(width, height, title),
       state(fs, assets),
@@ -34,9 +35,8 @@ Editor::Editor(int width, int height, const char* title)
       context(RenderContext::Create()),
       m_SkyboxSystem(context),
       m_GridSystem(context),
-      m_MeshSystem(context) {}
-
-void Editor::AddMesh(Mesh& mesh) { meshes.push_back(mesh); }
+      m_MeshSystem(context),
+      m_SceneManager(scene) {}
 
 void Editor::OnInit() {
     Logger::Log(LOG_INFO, "Initializing Ember Engine 0.0.1");
@@ -143,11 +143,11 @@ void Editor::DefineUI() {
     std::shared_ptr<ImGuiLayoutContainer> lc3 =
         CreateLayoutContainer<ImGuiLayoutContainer>(1, 1);
 
-    lc1->AddElement(CreatePanel<ScenePropsPanel>(state), 1);
+    lc1->AddElement(CreatePanel<ScenePropsPanel>(state, m_SceneManager), 1);
     lc1->AddElement(CreatePanel<AssetLibraryPanel>(state), 1);
     lc2->AddElement(CreatePanel<FramebufferPanel>("Scene", state, scenebuffer),
                     1);
-    lc3->AddElement(CreatePanel<NodePropsPanel>(state), 1);
+    lc3->AddElement(CreatePanel<NodePropsPanel>(state, m_SceneManager), 1);
 
     lc->AddElement(lc1, 3);
     lc->AddElement(lc2, 9);
@@ -160,10 +160,6 @@ void Editor::DefineUI() {
 //-------------------------Input Handling--------------------------------//
 
 void Editor::OnKeyPressed(int key) {
-    // Retrieve current camera position and look target.
-    // glm::vec3 position = camera.GetCameraPosition();
-    // glm::vec3 look = camera.GetCameraLook();
-
     auto& cameraComponent =
         scene.GetComponent<CameraComponent>(m_MainCameraEntity);
 
@@ -179,48 +175,27 @@ void Editor::OnKeyPressed(int key) {
     if (key == KeyEvent::KEY_W) {
         std::cout << "Moving Forward" << std::endl;
         glm::vec3 delta = forward * movementSpeed;
-        // camera.SetCameraPosition(position.x + delta.x, position.y + delta.y,
-        //                          position.z + delta.z);
-        // camera.SetCameraLook(look.x + delta.x, look.y + delta.y,
-        //                      look.z + delta.z);
-
         cameraComponent.cameraPosition += delta;
         cameraComponent.cameraLook += delta;
     }
     if (key == KeyEvent::KEY_S) {
         glm::vec3 delta = forward * movementSpeed;
-        // camera.SetCameraPosition(position.x - delta.x, position.y - delta.y,
-        //                          position.z - delta.z);
-        // camera.SetCameraLook(look.x - delta.x, look.y - delta.y,
-        //                      look.z - delta.z);
-
         cameraComponent.cameraPosition -= delta;
         cameraComponent.cameraLook -= delta;
     }
 
     if (key == KeyEvent::KEY_A) {
         glm::vec3 delta = right * movementSpeed;
-        // camera.SetCameraPosition(position.x - delta.x, position.y - delta.y,
-        //                          position.z - delta.z);
-        // camera.SetCameraLook(look.x - delta.x, look.y - delta.y,
-        //                      look.z - delta.z);
-
         cameraComponent.cameraPosition -= delta;
         cameraComponent.cameraLook -= delta;
     }
 
     if (key == KeyEvent::KEY_D) {
         glm::vec3 delta = right * movementSpeed;
-        // camera.SetCameraPosition(position.x + delta.x, position.y + delta.y,
-        //                          position.z + delta.z);
-        // camera.SetCameraLook(look.x + delta.x, look.y + delta.y,
-        //                      look.z + delta.z);
-
         cameraComponent.cameraPosition += delta;
         cameraComponent.cameraLook += delta;
     }
 
-#define debug
 #ifdef debug
 
     std::cout << "Camera Position: " << cameraComponent.cameraPosition.x << ","
@@ -252,6 +227,9 @@ void Editor::OnMouseReleased(int button) {
 }
 
 void Editor::OnMouseMoved(double xpos, double ypos) {
+    auto& cameraComponent =
+        scene.GetComponent<CameraComponent>(m_MainCameraEntity);
+
     if (!leftMouseDown) {
         return;
     }
@@ -293,9 +271,6 @@ void Editor::OnMouseMoved(double xpos, double ypos) {
     // Update the camera look target.
     // (Camera look = camera position + front vector)
 
-    // camera.SetCameraLook(newLook.x, newLook.y, newLook.z);
-    auto& cameraComponent =
-        scene.GetComponent<CameraComponent>(m_MainCameraEntity);
     glm::vec3 newLook = cameraComponent.cameraPosition + front;
     cameraComponent.cameraLook = newLook;
 }

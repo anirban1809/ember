@@ -2,6 +2,7 @@
 #define __ENTITY_H__
 
 #include "Core/Types.h"
+#include <string>
 
 class Scene;
 class Entity {
@@ -24,10 +25,10 @@ class Entity {
 
     template <typename T>
     void RemoveComponent();
+    Scene* scene;
 
    private:
     uint64 entityId;
-    Scene* scene;
 };
 
 #endif  // __ENTITY_H__

@@ -173,5 +173,19 @@ class Importer {
                 {ShaderType::Float3, 5 * sizeof(float), 2},  // normal
             });
     }
+
+    static std::shared_ptr<MeshComponent> LoadEmptyMeshComponent() {
+        std::vector<float> vertexBuffer;  // [x, y, z, u, v, nx, ny, nz]
+        std::vector<uint32> indexBuffer;
+
+        return std::make_shared<MeshComponent>(
+            vertexBuffer, indexBuffer,
+            VertexLayout{
+                {ShaderType::Float3, 0 * sizeof(float), 0},  // position
+                {ShaderType::Float2, 3 * sizeof(float), 1},  // texcoord
+                {ShaderType::Float3, 5 * sizeof(float), 2},  // normal
+            });
+    }
 };
+
 #endif  // __IMPORTER_H__

@@ -3,13 +3,15 @@
 
 #include "../ImGuiPanel.h"
 #include "../../ApplicationState.h"
+#include "UI/SceneManager.h"
 
 class NodePropsPanel : public ImGuiPanel {
    public:
-    NodePropsPanel(ApplicationState&);
+    NodePropsPanel(ApplicationState&, SceneManager&);
     void Render();
 
    private:
     ApplicationState& state;
+    SceneManager& m_SceneManager;
 };
 #endif  // __NODEPROPSPANEL_H__

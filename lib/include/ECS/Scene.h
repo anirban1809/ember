@@ -18,9 +18,12 @@ class Scene {
     Entity CreateEntity(const std::string& name) {
         Entity e = Entity(entityId++, this);
         m_Entities.insert(e.GetId());
-        m_EntityNames[e.GetId()] = name;
+        m_EntityNames[e.GetId()] = name + std::to_string(e.GetId());
+        m_EntityIdMap[e.GetId()] = e;
         return e;
     }
+
+    Entity GetEntityById(uint64 id) { return m_EntityIdMap[id]; }
 
     void DestroyEntity(Entity entity) {
         uint32 id = entity.GetId();
@@ -108,11 +111,16 @@ class Scene {
         return result;
     }
 
+    // std::string GetEntityName(uint64 id) { return m_EntityNames[id]; }
+
+    std::unordered_set<uint64> GetAllEntities() { return m_Entities; }
+    std::unordered_map<uint64, Entity> m_EntityIdMap;
+    std::unordered_map<uint64, std::string> m_EntityNames;
+
    private:
     uint64 entityId = 1;
     std::string m_SceneName;
     std::unordered_set<uint64> m_Entities;
-    std::unordered_map<uint64, std::string> m_EntityNames;
     std::unordered_map<std::type_index,
                        std::unordered_map<uint64, std::shared_ptr<Component>>>
         components;
