@@ -71,30 +71,23 @@ void Editor::OnInit() {
     scene.AddComponent<SkyboxComponent>(
         skybox,
         "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
-        "plainscubemap.png");
+        "cubemap3.png");
 
     scene.AddComponent<CameraComponent>(
         m_MainCameraEntity, glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0.0f),
-        glm::vec4(45.0f, 1.0f, 0.1f, 1000.0f));
+        glm::vec4(60.0f, 1.0f, 0.1f, 1000.0f));
 
     m_SkyboxSystem.Init(scene);
 
-    Entity e = scene.CreateEntity("default_mesh");
-    e.AddComponent<MeshComponent>(Importer::LoadMeshComponent(
-        "/Users/anirban/Documents/Code/engine/editor/models/"
-        "testscene.obj"));
-
-    Entity e2 = scene.CreateEntity("default_mesh2");
+    Entity e2 = scene.CreateEntity("default_mesh");
     e2.AddComponent<MeshComponent>(Importer::LoadMeshComponent(
         "/Users/anirban/Documents/Code/engine/editor/models/"
         "Chair.obj"));
 
-    Entity light1 = scene.CreateEntity("point_light1");
+    Entity light1 = scene.CreateEntity("default_point_light");
     LightComponent lightComponent = LightComponent();
-
     lightComponent.lightColor = glm::vec3(1.0f);
     lightComponent.lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
-
     scene.AddComponent<LightComponent>(light1, lightComponent);
 }
 

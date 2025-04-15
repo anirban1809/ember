@@ -8,8 +8,8 @@ uniform mat4 invProjection;
 uniform vec3 cameraPos;
 
 const vec3 backgroundColor = vec3(0.761, 0.761, 0.761);
-const vec3 gridColor = vec3(1.0);  // Black
-const vec3 axisColor = vec3(1.0);  // Black
+const vec3 gridColor = vec3(1.0);  // Grid line color
+const vec3 axisColor = vec3(1.0);  // Axis line color
 
 // Grid spacing (snap to powers of 2)
 float getGridSpacing(float camHeight) {
@@ -32,7 +32,6 @@ float axisLineAA(float coord) {
     return 1.0 - smoothstep(0.0, aa, dist);
 }
 
-// Dynamic distance fade range
 // Dynamic distance fade range
 float dynamicFadeEnd(float camHeight) {
     float referenceHeight = 100.0;
@@ -57,23 +56,24 @@ void main() {
     if (t < 0.0) discard;
 
     vec3 hit = cameraPos + t * rayDir;
-    // float spacing = getGridSpacing(abs(cameraPos.y));
-
     float camHeight = abs(cameraPos.y);
     float spacing = getGridSpacing(camHeight);
 
     float grid = gridLineAA(hit.xz, spacing);
     float axis = max(axisLineAA(hit.x), axisLineAA(hit.z));
 
-    // 📌 Apply dynamic distance fade
+    // Fade factor based on distance
     float fadeEnd = dynamicFadeEnd(camHeight);
-    float fadeStart = fadeEnd * 0.2;
+    float fadeStart = fadeEnd * 0.5;
     float fade = fadeByDistance(hit.xz, cameraPos.xz, fadeStart, fadeEnd);
-    grid *= fade;
 
-    // Final color mix
+    // Color blending
     vec3 color = mix(backgroundColor, gridColor, grid);
     color = mix(color, axisColor, axis);
 
-    FragColor = vec4(color, 0.7);
+    // Apply fade to the alpha channel of the *entire grid*
+    float baseAlpha = 1.0;
+    float finalAlpha = baseAlpha * fade;
+
+    FragColor = vec4(color, finalAlpha);
 }
