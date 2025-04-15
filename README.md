@@ -13,12 +13,13 @@ Ember currently is in very initial stages of development and is not in a state o
  - Entity Component System
  - Loading multiple static meshes
  - Multiple Scene lighting
+ - Transformation for Static Meshes(Position, Rotation, Scale)
 
 ### In Development
 The following features are currently under development
 
  - Material systems
- - Loading Static Meshes dynamically
+ - Loading/Updating Static Meshes at Runtime.
 
 ### Building and running Ember
 Build dependencies are only available for mac os as I am using a mac to develop this. Support for Visual Studio solutions and Windows builds will be added soon.
