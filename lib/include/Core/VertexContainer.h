@@ -9,6 +9,12 @@
 #include "Types.h"
 #include <vector>
 #include "../../../vendor/glm/glm.hpp"
+
+/**
+ * @deprecated Do not use this class! Use the RenderContext for a platform
+ * independent implementation of rendering apis
+ *
+ */
 class VertexContainer {
    public:
     VertexContainer(Shader *, Shader *);

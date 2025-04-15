@@ -4,9 +4,9 @@
 #include "../ImGuiPanel.h"
 #include "UI/ApplicationState.h"
 
-class AssetLibraryPanel : public ImGuiPanel {
+class GeneralDetailsPanel : public ImGuiPanel {
    public:
-    AssetLibraryPanel(ApplicationState&);
+    GeneralDetailsPanel(ApplicationState&);
     void Render();
 
    private:

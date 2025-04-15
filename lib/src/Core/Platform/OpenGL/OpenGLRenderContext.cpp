@@ -28,10 +28,6 @@ void OpenGLRenderContext::SubmitMesh(const Mesh& mesh) {
 }
 
 void OpenGLRenderContext::SubmitMesh(MeshComponent& mesh) {
-    auto shader = ShaderRegistry::GetShader("main");
-    shader->Bind();
-    shader->SetUniformMat4("model", glm::mat4(1.0f));
-
     mesh.vao->Bind();
     glEnable(GL_DEPTH_TEST);
     glDrawElements(GL_TRIANGLES, mesh.ibo->GetCount(), GL_UNSIGNED_INT,

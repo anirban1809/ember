@@ -3,6 +3,7 @@
 #include "Core/ShaderRegistry.h"
 #include "ECS/Components/CameraComponent.h"
 #include "ECS/Components/MeshComponent.h"
+#include "ECS/Components/TransformComponent.h"
 #include "ECS/Entity.h"
 #include "ECS/Entity.inl"
 #include "glm/glm.hpp"
@@ -25,8 +26,13 @@ void MeshSystem::Init(Scene& scene) {
 }
 
 void MeshSystem::Render(Scene& scene) {
+    auto shader = ShaderRegistry::GetShader("main");
+    shader->Bind();
     for (Entity e : scene.View<MeshComponent>()) {
-        auto& component = e.GetComponent<MeshComponent>();
-        m_RenderContext->SubmitMesh(component);
+        auto& mesh = e.GetComponent<MeshComponent>();
+        auto& transform = e.GetComponent<TransformComponent>();
+        glm::mat4 model = transform.GetTransform();
+        shader->SetUniformMat4("model", model);
+        m_RenderContext->SubmitMesh(mesh);
     }
 }

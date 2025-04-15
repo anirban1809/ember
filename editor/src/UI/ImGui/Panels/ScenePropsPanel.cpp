@@ -4,7 +4,7 @@
 #include "ECS/Components/MeshComponent.h"
 #include "UI/SceneManager.h"
 #include <iostream>
-#include "../../../../importer.h"
+#include <Core/Utils/MeshImporter.h>
 
 ScenePropsPanel::ScenePropsPanel(ApplicationState& p_AppState,
                                  SceneManager& p_SceneManager)
@@ -29,7 +29,7 @@ void ScenePropsPanel::Render() {
         if (ImGui::MenuItem("Add Static Mesh")) {
             Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
             m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
-                e, Importer::LoadEmptyMeshComponent());
+                e, MeshComponent());
         }
         if (ImGui::MenuItem("Add Light Object")) {
             Entity e = m_SceneManager.CreateEntity("E_PointLight");

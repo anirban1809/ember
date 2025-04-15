@@ -1,7 +1,7 @@
 #ifndef __MONITORUTILS_H__
 #define __MONITORUTILS_H__
 
-#include "../../../../vendor/glfw-3.4.bin.MACOS/include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 struct MonitorWorkArea {
     int x = 0;

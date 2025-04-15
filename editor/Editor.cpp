@@ -13,6 +13,7 @@
 #include "ECS/Components/LightComponent.h"
 #include "ECS/Components/MeshComponent.h"
 #include "ECS/Components/SkyboxComponent.h"
+#include "ECS/Components/TransformComponent.h"
 #include "ECS/Entity.h"
 #include "ECS/Scene.h"
 #include "ECS/Systems/SkyboxSystem.h"
@@ -25,7 +26,8 @@
 #include "UI/ImGui/Panels/ScenePropsPanel.h"
 #include "UI/TextureCube.h"
 #include "glm/fwd.hpp"
-#include "importer.h"
+#include <Core/Utils/MeshImporter.h>
+#include <iostream>
 #include <memory>
 
 Editor::Editor(int width, int height, const char* title)
@@ -80,15 +82,10 @@ void Editor::OnInit() {
     m_SkyboxSystem.Init(scene);
 
     Entity e2 = scene.CreateEntity("default_mesh");
-    e2.AddComponent<MeshComponent>(Importer::LoadMeshComponent(
+    e2.AddComponent<MeshComponent>(
         "/Users/anirban/Documents/Code/engine/editor/models/"
-        "Chair.obj"));
-
-    Entity light1 = scene.CreateEntity("default_point_light");
-    LightComponent lightComponent = LightComponent();
-    lightComponent.lightColor = glm::vec3(1.0f);
-    lightComponent.lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
-    scene.AddComponent<LightComponent>(light1, lightComponent);
+        "testscene.obj");
+    e2.AddComponent<TransformComponent>();
 }
 
 void Editor::OnUpdate() {}
@@ -137,7 +134,7 @@ void Editor::DefineUI() {
         CreateLayoutContainer<ImGuiLayoutContainer>(1, 1);
 
     lc1->AddElement(CreatePanel<ScenePropsPanel>(state, m_SceneManager), 1);
-    lc1->AddElement(CreatePanel<AssetLibraryPanel>(state), 1);
+    lc1->AddElement(CreatePanel<GeneralDetailsPanel>(state), 1);
     lc2->AddElement(CreatePanel<FramebufferPanel>("Scene", state, scenebuffer),
                     1);
     lc3->AddElement(CreatePanel<NodePropsPanel>(state, m_SceneManager), 1);

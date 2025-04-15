@@ -2,14 +2,14 @@
 #include "../../../../../vendor/imgui/imgui.h"
 #include <iostream>
 
-AssetLibraryPanel::AssetLibraryPanel(ApplicationState& s) : state(s) {}
+GeneralDetailsPanel::GeneralDetailsPanel(ApplicationState& s) : state(s) {}
 
-void AssetLibraryPanel::Render() {
+void GeneralDetailsPanel::Render() {
     SetPositionAndSize();
 
-    ImGui::Begin("Asset Library");
+    ImGui::Begin("General Details");
 
-    for (auto const& item : state.assets) { ImGui::Text("%s", item.c_str()); }
+    ImGui::Text("Frame Rate: %.1f FPS", ImGui::GetIO().Framerate);
 
     ImGui::End();
 }
