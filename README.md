@@ -37,3 +37,4 @@ Then to build, run:
 
 The executables will be created in the `build` directory.
 
+<img width="1987" alt="image" src="https://github.com/user-attachments/assets/75d7bb2a-83c4-4b68-80b2-fc14f0071066" />
