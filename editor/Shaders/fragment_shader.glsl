@@ -40,7 +40,7 @@ void main() {
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
         vec3 specular = spec * specularColor * lights[i].color;
 
-        result += diffuse + specular;
+        result += diffuse;
     }
 
     FragColor = vec4(result, 1.0);

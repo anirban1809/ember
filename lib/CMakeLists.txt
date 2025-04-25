@@ -22,6 +22,7 @@ target_include_directories(lib PUBLIC
     ${CMAKE_SOURCE_DIR}/vendor/assimp/build/include
     ${CMAKE_SOURCE_DIR}/vendor/glfw-3.4.bin.MACOS/include
     ${CMAKE_SOURCE_DIR}/vendor/imgui
+    ${CMAKE_SOURCE_DIR}/vendor/stb
 )
 
 target_link_libraries(lib PUBLIC

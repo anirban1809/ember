@@ -73,7 +73,7 @@ void Editor::OnInit() {
     scene.AddComponent<SkyboxComponent>(
         skybox,
         "/Users/anirban/Documents/Code/engine/editor/Cubemaps/"
-        "cubemap3.png");
+        "industrialsky.png");
 
     scene.AddComponent<CameraComponent>(
         m_MainCameraEntity, glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0.0f),
@@ -81,11 +81,11 @@ void Editor::OnInit() {
 
     m_SkyboxSystem.Init(scene);
 
-    Entity e2 = scene.CreateEntity("default_mesh");
-    e2.AddComponent<MeshComponent>(
-        "/Users/anirban/Documents/Code/engine/editor/models/"
-        "testscene.obj");
-    e2.AddComponent<TransformComponent>();
+    // Entity e2 = scene.CreateEntity("default_mesh");
+    // e2.AddComponent<MeshComponent>(
+    //     "/Users/anirban/Documents/Code/engine/editor/models/"
+    //     "testscene.obj");
+    // e2.AddComponent<TransformComponent>();
 }
 
 void Editor::OnUpdate() {}

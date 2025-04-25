@@ -2,6 +2,7 @@
 #include "../../../../../vendor/imgui/imgui.h"
 #include "ECS/Components/LightComponent.h"
 #include "ECS/Components/MeshComponent.h"
+#include "ECS/Components/TransformComponent.h"
 #include "UI/SceneManager.h"
 #include <iostream>
 #include <Core/Utils/MeshImporter.h>
@@ -30,6 +31,8 @@ void ScenePropsPanel::Render() {
             Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
             m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
                 e, MeshComponent());
+            m_SceneManager.GetActiveScene().AddComponent<TransformComponent>(
+                e, TransformComponent());
         }
         if (ImGui::MenuItem("Add Light Object")) {
             Entity e = m_SceneManager.CreateEntity("E_PointLight");
