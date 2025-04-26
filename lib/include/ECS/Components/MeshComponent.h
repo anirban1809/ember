@@ -2,9 +2,9 @@
 #define __MESHCOMPONENT_H__
 
 #include "Core/Material.h"
-// #include "Core/Utils/MeshImporter.h"
 #include "Core/Utils/MeshImporter.h"
 #include "Core/VertexArray.h"
+#include "Core/VertexLayout.h"
 #include "ECS/Component.h"
 #include "glm/glm.hpp"
 
@@ -26,6 +26,8 @@ struct MeshComponent : public Component {
             {ShaderType::Float3, 0 * sizeof(float), 0},  // position
             {ShaderType::Float2, 3 * sizeof(float), 1},  // texcoord
             {ShaderType::Float3, 5 * sizeof(float), 2},  // normal
+            {ShaderType::Float3, 8 * sizeof(float), 3},  // tangent
+            {ShaderType::Float3, 11 * sizeof(float), 4}  // bitangent
         };
 
         std::vector<float> vertices;

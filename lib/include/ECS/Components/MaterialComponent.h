@@ -4,6 +4,7 @@
 #include "Core/Texture.h"
 #include "ECS/Component.h"
 #include <glm/glm.hpp>
+#include <memory>
 #include <unordered_map>
 
 struct MaterialComponent : public Component {
@@ -11,7 +12,7 @@ struct MaterialComponent : public Component {
     float metallic = 0.0f;
     float roughness = 1.0f;
 
-    std::unordered_map<std::string, Texture> textures;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
     MaterialComponent() = default;
 };

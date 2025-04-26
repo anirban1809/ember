@@ -1,6 +1,8 @@
 #include "../../../../include/UI/ImGui/Panels/ScenePropsPanel.h"
 #include "../../../../../vendor/imgui/imgui.h"
+#include "Core/Texture.h"
 #include "ECS/Components/LightComponent.h"
+#include "ECS/Components/MaterialComponent.h"
 #include "ECS/Components/MeshComponent.h"
 #include "ECS/Components/TransformComponent.h"
 #include "UI/SceneManager.h"
@@ -30,9 +32,29 @@ void ScenePropsPanel::Render() {
         if (ImGui::MenuItem("Add Static Mesh")) {
             Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
             m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
-                e, MeshComponent());
+                e, MeshComponent("/Users/anirban/Documents/Code/engine/editor/"
+                                 "models/Cube.obj"));
             m_SceneManager.GetActiveScene().AddComponent<TransformComponent>(
                 e, TransformComponent());
+            m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
+                e, MaterialComponent());
+
+            auto& mat =
+                m_SceneManager.GetActiveScene().GetComponent<MaterialComponent>(
+                    e);
+            mat.albedoColor = glm::vec3(1.0f, 0.5f, 0.31f);  // Orange-ish
+            mat.metallic = 0.1f;
+            mat.roughness = 0.5f;
+
+            mat.textures["albedoMap"] = Texture::Create(
+                "/Users/anirban/Documents/Code/engine/editor/textures/"
+                "white_marble_03_2k_baseColor.tga",
+                TextureType::Albedo, true);
+
+            mat.textures["normalMap"] = Texture::Create(
+                "/Users/anirban/Documents/Code/engine/editor/textures/"
+                "white_marble_03_2k_normal.tga",
+                TextureType::Normal, false);
         }
         if (ImGui::MenuItem("Add Light Object")) {
             Entity e = m_SceneManager.CreateEntity("E_PointLight");
