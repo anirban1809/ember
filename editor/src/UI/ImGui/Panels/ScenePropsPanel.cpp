@@ -39,32 +39,32 @@ void ScenePropsPanel::Render() {
             m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
                 e, MaterialComponent());
 
-            auto& mat =
-                m_SceneManager.GetActiveScene().GetComponent<MaterialComponent>(
-                    e);
-            // mat.albedoColor = glm::vec3(1.0f, 0.5f, 0.31f);  // Orange-ish
-            mat.metallic = 0.1f;
-            mat.roughness = 0.5f;
+            // auto& mat =
+            //     m_SceneManager.GetActiveScene().GetComponent<MaterialComponent>(
+            //         e);
+            // // mat.albedoColor = glm::vec3(1.0f, 0.5f, 0.31f);  // Orange-ish
+            // mat.metallic = 0.1f;
+            // mat.roughness = 0.5f;
 
-            mat.textures["albedoMap"] = Texture::Create(
-                "/Users/anirban/Documents/Code/engine/editor/textures/"
-                "white_marble_03_2k_baseColor.tga",
-                TextureType::Albedo, true);
+            // mat.textures["albedoMap"] = Texture::Create(
+            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+            //     "white_marble_03_2k_baseColor.tga",
+            //     TextureType::Albedo, true);
 
-            mat.textures["normalMap"] = Texture::Create(
-                "/Users/anirban/Documents/Code/engine/editor/textures/"
-                "white_marble_03_2k_normal.tga",
-                TextureType::Normal, false);
+            // mat.textures["normalMap"] = Texture::Create(
+            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+            //     "white_marble_03_2k_normal.tga",
+            //     TextureType::Normal, false);
 
-            mat.textures["roughnessMap"] = Texture::Create(
-                "/Users/anirban/Documents/Code/engine/editor/textures/"
-                "white_marble_03_2k_roughness.tga",
-                TextureType::Normal, false);
+            // mat.textures["roughnessMap"] = Texture::Create(
+            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+            //     "white_marble_03_2k_roughness.tga",
+            //     TextureType::Normal, false);
 
-            mat.textures["heightMap"] = Texture::Create(
-                "/Users/anirban/Documents/Code/engine/editor/textures/"
-                "white_marble_03_2k_height.tga",
-                TextureType::Unknown, false);
+            // mat.textures["heightMap"] = Texture::Create(
+            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+            //     "white_marble_03_2k_height.tga",
+            //     TextureType::Unknown, false);
         }
         if (ImGui::MenuItem("Add Light Object")) {
             Entity e = m_SceneManager.CreateEntity("E_PointLight");

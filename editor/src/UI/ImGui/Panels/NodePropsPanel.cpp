@@ -1,4 +1,5 @@
 #include "../../../../include/UI/ImGui/Panels/NodePropsPanel.h"
+#include "../../../../include/UI/MacOS/OpenFilePanel.h"
 #include "../../../../../vendor/imgui/imgui.h"
 #include "ECS/Components/LightComponent.h"
 #include "ECS/Components/MeshComponent.h"
@@ -43,7 +44,13 @@ void NodePropsPanel::Render() {
         std::string fileName = path.filename().string();
 
         ImGui::Text("File: %s", fileName.c_str());
-        ImGui::Button("Load");
+
+        if (ImGui::Button("Load")) {
+            std::string selectedFilePath = OpenFileDialog(
+                "/Users/anirban/Documents/Code/engine/editor/models");
+            auto& meshComponent = selected.GetComponent<MeshComponent>();
+            meshComponent.LoadMesh(selectedFilePath);
+        }
 
         ImGui::NewLine();
         ImGui::Separator();
