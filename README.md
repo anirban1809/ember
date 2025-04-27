@@ -15,12 +15,22 @@ Ember currently is in very initial stages of development and is not in a state o
  - Multiple Scene lighting
  - Transformation for Static Meshes(Position, Rotation, Scale)
  - Material systems (Albedo, Normal, Roughness and Height Maps)
+ - Loading/Updating Static Meshes at Runtime.
 
 ### In Development
 The following features are currently under development
- - Loading/Updating Static Meshes at Runtime.
  - Loading/Updating Materials and textures at runtime
+ - Material Editor
+
+### To be supported in the future
+The following features have been planned 
  - Global Illumination
+ - FBX and GLTF support
+ - Realtime Ray Tracing
+ - Procedural Mesh Generation
+ - Virtual Geometry
+ - Physics
+ - Animation
 
 ### Building and running Ember
 Build dependencies are only available for mac os as I am using a mac to develop this. Support for Visual Studio solutions and Windows builds will be added soon.
