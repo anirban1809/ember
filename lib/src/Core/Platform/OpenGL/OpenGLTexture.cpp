@@ -9,7 +9,9 @@ void OpenGLTexture::LoadFromFile(const std::string& path, bool srgb) {
     stbi_set_flip_vertically_on_load(true);
 
     unsigned char* data =
-        stbi_load(path.c_str(), &width, &height, &channels, 0);
+        stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb);
+    std::cout << "Loaded " << path << " with channels: " << channels
+              << std::endl;
 
     if (!data) {
         std::cerr << "Failed to load texture: " << path << std::endl;
@@ -30,7 +32,7 @@ void OpenGLTexture::LoadFromFile(const std::string& path, bool srgb) {
     }
 
     if (channels == 1) {
-        internalFormat = format = GL_RED;
+        internalFormat = srgb ? GL_SRGB8 : GL_RGB8;
     }
 
     glGenTextures(1, &rendererId);

@@ -40,6 +40,7 @@ void MeshSystem::Render(Scene& scene) {
         shader->SetUniformFloat3("u_AlbedoColor", material.albedoColor);
         shader->SetUniformFloat("u_Metallic", material.metallic);
         shader->SetUniformFloat("u_Roughness", material.roughness);
+        shader->SetUniformFloat("u_HeightScale", material.heightScale);
 
         uint32_t textureSlot = 0;
         // Bind Albedo Map
@@ -53,6 +54,20 @@ void MeshSystem::Render(Scene& scene) {
         if (material.textures.find("normalMap") != material.textures.end()) {
             material.textures["normalMap"]->Bind(textureSlot);
             shader->SetUniformInt("u_normalMap", textureSlot);
+            textureSlot++;
+        }
+
+        // bind roughness map
+        if (material.textures.find("roughnessMap") != material.textures.end()) {
+            material.textures["roughnessMap"]->Bind(textureSlot);
+            shader->SetUniformInt("u_RoughnessMap", textureSlot);
+            textureSlot++;
+        }
+
+        // bind heightmap
+        if (material.textures.find("heightMap") != material.textures.end()) {
+            material.textures["heightMap"]->Bind(textureSlot);
+            shader->SetUniformInt("u_HeightMap", textureSlot);
             textureSlot++;
         }
 

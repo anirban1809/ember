@@ -11,6 +11,7 @@ struct MaterialComponent : public Component {
     glm::vec3 albedoColor = glm::vec3(1.0f);
     float metallic = 0.0f;
     float roughness = 1.0f;
+    float heightScale = 0.01f;
 
     std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
