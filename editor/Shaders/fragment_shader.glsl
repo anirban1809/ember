@@ -8,12 +8,20 @@ in vec3 Bitangent;
 
 out vec4 FragColor;
 
-uniform sampler2D u_albedoMap;     // Albedo texture
-uniform sampler2D u_normalMap;     // Normal map
-uniform sampler2D u_roughnessMap;  // roughness map
-uniform sampler2D u_HeightMap;     // heightmap
+// Samplers
+uniform sampler2D u_albedoMap;
+uniform sampler2D u_normalMap;
+uniform sampler2D u_roughnessMap;
+uniform sampler2D u_HeightMap;
 
-uniform vec3 u_AlbedoColor;  // Material color if no texture
+// Texture presence flags
+uniform bool u_HasAlbedoMap;
+uniform bool u_HasNormalMap;
+uniform bool u_HasRoughnessMap;
+uniform bool u_HasHeightMap;
+
+// Material constants
+uniform vec3 u_AlbedoColor;
 uniform float u_Metallic;
 uniform float u_Roughness;
 uniform float u_HeightScale;
@@ -46,11 +54,9 @@ vec2 ParallaxOcclusionMapping(vec2 texCoords, vec3 viewDirTS,
     vec2 currentTexCoords = texCoords;
     float currentDepthMapValue = texture(u_HeightMap, currentTexCoords).r;
 
-    // Previous values to interpolate later
     vec2 prevTexCoords = currentTexCoords;
     float prevDepthMapValue = currentDepthMapValue;
 
-    // Step forward until we go past surface
     while (currentLayerDepth < currentDepthMapValue) {
         prevTexCoords = currentTexCoords;
         prevDepthMapValue = currentDepthMapValue;
@@ -60,7 +66,6 @@ vec2 ParallaxOcclusionMapping(vec2 texCoords, vec3 viewDirTS,
         currentLayerDepth += layerDepth;
     }
 
-    // Binary search refinement between previous and current TexCoords
     const int refinementSteps = 5;
     for (int i = 0; i < refinementSteps; ++i) {
         vec2 midTexCoords = (currentTexCoords + prevTexCoords) * 0.5;
@@ -84,49 +89,50 @@ void main() {
     vec3 viewDir = normalize(viewPos - FragPos);
     mat3 TBN =
         mat3(normalize(Tangent), normalize(Bitangent), normalize(Normal));
-
     vec3 viewDirTS = normalize(TBN * viewDir);
-    float height = texture(u_HeightMap, TexCoord).r;
-    vec2 displacedTexCoord =
-        ParallaxOcclusionMapping(TexCoord, viewDirTS, u_HeightScale);
+
+    vec2 displacedTexCoord = TexCoord;
+    if (u_HasHeightMap)
+        displacedTexCoord =
+            ParallaxOcclusionMapping(TexCoord, viewDirTS, u_HeightScale);
 
     displacedTexCoord = clamp(displacedTexCoord, 0.0, 1.0);
 
-    // Sample and remap normal map
-    vec3 sampledNormal = texture(u_normalMap, displacedTexCoord).xyz;
-    sampledNormal = sampledNormal * 2.0 - 1.0;  // Remap [0,1] -> [-1,1]
-
-    // transform normal into world space
-
-    vec3 worldNormal = normalize(TBN * sampledNormal);
-
-    // Sample albedo texture (color texture)
-    vec3 albedo = texture(u_albedoMap, displacedTexCoord).rgb;
-    if (length(albedo) < 0.001) {
+    // Albedo
+    vec3 albedo = u_AlbedoColor;
+    if (u_HasAlbedoMap) {
+        albedo = texture(u_albedoMap, displacedTexCoord).rgb;
+    } else {
         albedo = u_AlbedoColor;
     }
 
-    // 4. Sample roughness texture
-    float roughness = texture(u_roughnessMap, displacedTexCoord).r;
-    if (roughness == 0.0) {
+    // Normal
+    vec3 sampledNormal = vec3(0.0, 0.0, 1.0);
+    if (u_HasNormalMap) {
+        sampledNormal = texture(u_normalMap, displacedTexCoord).xyz;
+        sampledNormal = sampledNormal * 2.0 - 1.0;
+    }
+    vec3 worldNormal = normalize(TBN * sampledNormal);
+
+    // Roughness
+    float roughness = u_Roughness;
+    if (u_HasRoughnessMap) {
+        roughness = texture(u_roughnessMap, displacedTexCoord).r;
+    } else {
         roughness = u_Roughness;
     }
 
-    // 4. Lighting
+    // Lighting
     vec3 result = vec3(0.0);
-    vec3 specularColor = vec3(1.0);  // Simple white specular highlights
+    vec3 specularColor = vec3(1.0);
 
     for (int i = 0; i < lightCount; ++i) {
         vec3 lightDir = normalize(lights[i].position - FragPos);
 
-        // Diffuse
         float diff = max(dot(worldNormal, lightDir), 0.0);
         vec3 diffuse = diff * albedo * lights[i].color;
 
-        // // Specular
         vec3 reflectDir = reflect(-lightDir, worldNormal);
-        // float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
-
         float shininess = mix(4.0, 256.0, 1.0 - roughness);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
         vec3 specular = spec * specularColor * lights[i].color;

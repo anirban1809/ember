@@ -2,6 +2,7 @@
 #include "../../../../include/UI/MacOS/OpenFilePanel.h"
 #include "../../../../../vendor/imgui/imgui.h"
 #include "ECS/Components/LightComponent.h"
+#include "ECS/Components/MaterialComponent.h"
 #include "ECS/Components/MeshComponent.h"
 #include "ECS/Components/TransformComponent.h"
 #include "UI/SceneManager.h"
@@ -36,10 +37,6 @@ void NodePropsPanel::Render() {
             m_SceneManager.GetActiveScene().GetComponent<MeshComponent>(
                 selected);
 
-        auto& transform =
-            m_SceneManager.GetActiveScene().GetComponent<TransformComponent>(
-                selected);
-
         std::filesystem::path path(mesh.filePath);
         std::string fileName = path.filename().string();
 
@@ -53,34 +50,36 @@ void NodePropsPanel::Render() {
         }
 
         ImGui::NewLine();
+
+        if (ImGui::BeginPopupContextWindow()) {
+            if (ImGui::MenuItem("Add Material")) {
+                selected.AddComponent<MaterialComponent>();
+            }
+
+            if (ImGui::MenuItem("Add SubMesh")) {
+                std::cout << "Addind SubMesh" << std::endl;
+            }
+            ImGui::EndPopup();
+        }
+    }
+
+    if (selected.HasComponent<TransformComponent>()) {
+        auto& transform = selected.GetComponent<TransformComponent>();
         ImGui::Separator();
         ImGui::NewLine();
         float position = 0.0f;
 
-        ImGui::Text("Position");
-
-        ImGui::DragFloat("Position X", &transform.position.x, 0.05f, -1000.0f,
-                         1000.0f);
-        ImGui::DragFloat("Position Y", &transform.position.y, 0.05f, -1000.0f,
-                         1000.0f);
-        ImGui::DragFloat("Position Z", &transform.position.z, 0.05f, -1000.0f,
-                         1000.0f);
+        ImGui::Text("Position (X,Y,Z)");
+        ImGui::DragFloat3("Position", glm::value_ptr(transform.position));
 
         ImGui::NewLine();
-        ImGui::Text("Rotation");
-        ImGui::DragFloat("Pitch", &transform.rotation.x, 0.05f, -1000.0f,
-                         1000.0f);
-        ImGui::DragFloat("Yaw", &transform.rotation.y, 0.05f, -1000.0f,
-                         1000.0f);
-        ImGui::DragFloat("Roll", &transform.rotation.z, 0.05f, -1000.0f,
-                         1000.0f);
+        ImGui::Text("Rotation (Pitch, Roll, Yaw)");
+        ImGui::DragFloat3("Rotation", glm::value_ptr(transform.rotation));
 
         ImGui::NewLine();
-        ImGui::Text("Scale");
-        ImGui::DragFloat("Width", &transform.scale.x, 0.05f, -1000.0f, 1000.0f);
-        ImGui::DragFloat("Height", &transform.scale.y, 0.05f, -1000.0f,
-                         1000.0f);
-        ImGui::DragFloat("Depth", &transform.scale.z, 0.05f, -1000.0f, 1000.0f);
+        ImGui::Text("Scale (Width, Height, Depth)");
+
+        ImGui::DragFloat3("Scale", glm::value_ptr(transform.scale));
     }
 
     if (selected.HasComponent<LightComponent>()) {
@@ -104,6 +103,24 @@ void NodePropsPanel::Render() {
         ImGui::NewLine();
         ImGui::Text("Light Color");
         ImGui::ColorEdit3("Light Color", glm::value_ptr(component.lightColor));
+    }
+
+    if (selected.HasComponent<MaterialComponent>()) {
+        auto& component = selected.GetComponent<MaterialComponent>();
+
+        ImGui::Separator();
+        ImGui::Text("Materials");
+
+        ImGui::NewLine();
+
+        ImGui::Text("Albedo Color");
+        ImGui::ColorEdit3("Albedo", glm::value_ptr(component.albedoColor));
+
+        ImGui::NewLine();
+        ImGui::SliderFloat("Metallic", &component.metallic, 0.0f, 1.0f);
+
+        ImGui::NewLine();
+        ImGui::SliderFloat("Roughness", &component.roughness, 0.0f, 1.0f);
     }
 
     ImGui::End();

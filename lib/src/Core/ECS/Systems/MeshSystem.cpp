@@ -31,44 +31,54 @@ void MeshSystem::Render(Scene& scene) {
     shader->Bind();
     for (Entity e : scene.View<MeshComponent>()) {
         auto& mesh = e.GetComponent<MeshComponent>();
-        auto& transform = e.GetComponent<TransformComponent>();
-        auto& material = e.GetComponent<MaterialComponent>();
 
-        glm::mat4 model = transform.GetTransform();
-        shader->SetUniformMat4("model", model);
-
-        shader->SetUniformFloat3("u_AlbedoColor", material.albedoColor);
-        shader->SetUniformFloat("u_Metallic", material.metallic);
-        shader->SetUniformFloat("u_Roughness", material.roughness);
-        shader->SetUniformFloat("u_HeightScale", material.heightScale);
-
-        uint32_t textureSlot = 0;
-        // Bind Albedo Map
-        if (material.textures.find("albedoMap") != material.textures.end()) {
-            material.textures["albedoMap"]->Bind(textureSlot);
-            shader->SetUniformInt("u_albedoMap", textureSlot);
-            textureSlot++;
+        if (e.HasComponent<TransformComponent>()) {
+            TransformComponent& transform =
+                e.GetComponent<TransformComponent>();
+            glm::mat4 model = transform.GetTransform();
+            shader->SetUniformMat4("model", model);
         }
 
-        // Bind Normal Map
-        if (material.textures.find("normalMap") != material.textures.end()) {
-            material.textures["normalMap"]->Bind(textureSlot);
-            shader->SetUniformInt("u_normalMap", textureSlot);
-            textureSlot++;
-        }
+        if (e.HasComponent<MaterialComponent>()) {
+            auto& material = e.GetComponent<MaterialComponent>();
 
-        // bind roughness map
-        if (material.textures.find("roughnessMap") != material.textures.end()) {
-            material.textures["roughnessMap"]->Bind(textureSlot);
-            shader->SetUniformInt("u_RoughnessMap", textureSlot);
-            textureSlot++;
-        }
+            shader->SetUniformFloat3("u_AlbedoColor", material.albedoColor);
+            shader->SetUniformFloat("u_Metallic", material.metallic);
+            shader->SetUniformFloat("u_Roughness", material.roughness);
+            shader->SetUniformFloat("u_HeightScale", material.heightScale);
 
-        // bind heightmap
-        if (material.textures.find("heightMap") != material.textures.end()) {
-            material.textures["heightMap"]->Bind(textureSlot);
-            shader->SetUniformInt("u_HeightMap", textureSlot);
-            textureSlot++;
+            uint32_t textureSlot = 0;
+            // Bind Albedo Map
+            if (material.textures.find("albedoMap") !=
+                material.textures.end()) {
+                material.textures["albedoMap"]->Bind(textureSlot);
+                shader->SetUniformInt("u_albedoMap", textureSlot);
+                textureSlot++;
+            }
+
+            // Bind Normal Map
+            if (material.textures.find("normalMap") !=
+                material.textures.end()) {
+                material.textures["normalMap"]->Bind(textureSlot);
+                shader->SetUniformInt("u_normalMap", textureSlot);
+                textureSlot++;
+            }
+
+            // bind roughness map
+            if (material.textures.find("roughnessMap") !=
+                material.textures.end()) {
+                material.textures["roughnessMap"]->Bind(textureSlot);
+                shader->SetUniformInt("u_RoughnessMap", textureSlot);
+                textureSlot++;
+            }
+
+            // bind heightmap
+            if (material.textures.find("heightMap") !=
+                material.textures.end()) {
+                material.textures["heightMap"]->Bind(textureSlot);
+                shader->SetUniformInt("u_HeightMap", textureSlot);
+                textureSlot++;
+            }
         }
 
         m_RenderContext->SubmitMesh(mesh);

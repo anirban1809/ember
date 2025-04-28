@@ -36,8 +36,8 @@ void ScenePropsPanel::Render() {
                                  "models/Cube.obj"));
             m_SceneManager.GetActiveScene().AddComponent<TransformComponent>(
                 e, TransformComponent());
-            m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
-                e, MaterialComponent());
+            // m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
+            //     e, MaterialComponent());
 
             // auto& mat =
             //     m_SceneManager.GetActiveScene().GetComponent<MaterialComponent>(
