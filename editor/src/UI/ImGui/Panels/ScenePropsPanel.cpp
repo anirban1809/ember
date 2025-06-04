@@ -29,52 +29,99 @@ void ScenePropsPanel::Render() {
     }
 
     if (ImGui::BeginPopupContextWindow()) {
-        if (ImGui::MenuItem("Add Static Mesh")) {
-            Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
-            m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
-                e, MeshComponent("/Users/anirban/Documents/Code/engine/editor/"
-                                 "models/Cube.obj"));
-            m_SceneManager.GetActiveScene().AddComponent<TransformComponent>(
-                e, TransformComponent());
-            // m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
-            //     e, MaterialComponent());
+        if (ImGui::BeginMenu("3D Object")) {
+            if (ImGui::MenuItem("Object")) {
+                Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
+                m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
+                    e,
+                    MeshComponent("/Users/anirban/Documents/Code/engine/editor/"
+                                  "models/Cube.obj"));
+                m_SceneManager.GetActiveScene()
+                    .AddComponent<TransformComponent>(e, TransformComponent());
+                // m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
+                //     e, MaterialComponent());
 
-            // auto& mat =
-            //     m_SceneManager.GetActiveScene().GetComponent<MaterialComponent>(
-            //         e);
-            // // mat.albedoColor = glm::vec3(1.0f, 0.5f, 0.31f);  // Orange-ish
-            // mat.metallic = 0.1f;
-            // mat.roughness = 0.5f;
+                // auto& mat =
+                //     m_SceneManager.GetActiveScene().GetComponent<MaterialComponent>(
+                //         e);
+                // // mat.albedoColor = glm::vec3(1.0f, 0.5f, 0.31f);  //
+                // Orange-ish mat.metallic = 0.1f; mat.roughness = 0.5f;
 
-            // mat.textures["albedoMap"] = Texture::Create(
-            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
-            //     "white_marble_03_2k_baseColor.tga",
-            //     TextureType::Albedo, true);
+                // mat.textures["albedoMap"] = Texture::Create(
+                //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+                //     "white_marble_03_2k_baseColor.tga",
+                //     TextureType::Albedo, true);
 
-            // mat.textures["normalMap"] = Texture::Create(
-            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
-            //     "white_marble_03_2k_normal.tga",
-            //     TextureType::Normal, false);
+                // mat.textures["normalMap"] = Texture::Create(
+                //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+                //     "white_marble_03_2k_normal.tga",
+                //     TextureType::Normal, false);
 
-            // mat.textures["roughnessMap"] = Texture::Create(
-            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
-            //     "white_marble_03_2k_roughness.tga",
-            //     TextureType::Normal, false);
+                // mat.textures["roughnessMap"] = Texture::Create(
+                //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+                //     "white_marble_03_2k_roughness.tga",
+                //     TextureType::Normal, false);
 
-            // mat.textures["heightMap"] = Texture::Create(
-            //     "/Users/anirban/Documents/Code/engine/editor/textures/"
-            //     "white_marble_03_2k_height.tga",
-            //     TextureType::Unknown, false);
+                // mat.textures["heightMap"] = Texture::Create(
+                //     "/Users/anirban/Documents/Code/engine/editor/textures/"
+                //     "white_marble_03_2k_height.tga",
+                //     TextureType::Unknown, false);
+            }
+
+            if (ImGui::MenuItem("Cube")) {
+            }
+            if (ImGui::MenuItem("Sphere")) {
+            }
+            if (ImGui::MenuItem("Cone")) {
+                Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
+                m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
+                    e,
+                    MeshComponent("/Users/anirban/Documents/Code/engine/editor/"
+                                  "models/Cone.obj"));
+                m_SceneManager.GetActiveScene()
+                    .AddComponent<TransformComponent>(e, TransformComponent());
+            }
+
+            if (ImGui::MenuItem("Cylinder")) {
+                Entity e = m_SceneManager.CreateEntity("E_StaticMesh");
+                m_SceneManager.GetActiveScene().AddComponent<MeshComponent>(
+                    e,
+                    MeshComponent("/Users/anirban/Documents/Code/engine/editor/"
+                                  "models/Cylinder.obj"));
+                m_SceneManager.GetActiveScene()
+                    .AddComponent<TransformComponent>(e, TransformComponent());
+            }
+            if (ImGui::MenuItem("Plane")) {
+            }
+            if (ImGui::MenuItem("Quad")) {
+            }
+
+            ImGui::EndMenu();
         }
-        if (ImGui::MenuItem("Add Light Object")) {
-            Entity e = m_SceneManager.CreateEntity("E_PointLight");
-            LightComponent lightComponent = LightComponent();
+        if (ImGui::BeginMenu("Light")) {
+            if (ImGui::MenuItem("Point")) {
+                Entity e = m_SceneManager.CreateEntity("E_PointLight");
+                LightComponent lightComponent = LightComponent();
 
-            lightComponent.lightColor = glm::vec3(1.0f);
-            lightComponent.lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
+                lightComponent.lightColor = glm::vec3(1.0f);
+                lightComponent.lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
 
-            m_SceneManager.GetActiveScene().AddComponent<LightComponent>(
-                e, lightComponent);
+                m_SceneManager.GetActiveScene().AddComponent<LightComponent>(
+                    e, lightComponent);
+            }
+
+            if (ImGui::MenuItem("Directional")) {
+                std::cout << "Create Directional Light" << std::endl;
+            }
+
+            if (ImGui::MenuItem("Spot")) {
+                std::cout << "Create Spot Light" << std::endl;
+            }
+
+            if (ImGui::MenuItem("Area")) {
+                std::cout << "Create Area Light" << std::endl;
+            }
+            ImGui::EndMenu();
         }
         ImGui::EndPopup();
     }

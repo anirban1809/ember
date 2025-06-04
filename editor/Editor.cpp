@@ -77,7 +77,7 @@ void Editor::OnInit() {
 
     scene.AddComponent<CameraComponent>(
         m_MainCameraEntity, glm::vec3(0.0f, 100.0f, 100.0f), glm::vec3(0.0f),
-        glm::vec4(60.0f, 1.0f, 0.1f, 1000.0f));
+        glm::vec4(60.0f, 1.0f, 0.1f, 1e6));
 
     m_SkyboxSystem.Init(scene);
 
