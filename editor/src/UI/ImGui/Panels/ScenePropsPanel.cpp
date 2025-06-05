@@ -1,13 +1,17 @@
 #include "../../../../include/UI/ImGui/Panels/ScenePropsPanel.h"
 #include "../../../../../vendor/imgui/imgui.h"
+#include "Core/Light.h"
 #include "Core/Texture.h"
+#include "ECS/Components/CameraComponent.h"
 #include "ECS/Components/LightComponent.h"
 #include "ECS/Components/MaterialComponent.h"
 #include "ECS/Components/MeshComponent.h"
 #include "ECS/Components/TransformComponent.h"
+#include "ECS/Entity.h"
 #include "UI/SceneManager.h"
 #include <iostream>
 #include <Core/Utils/MeshImporter.h>
+#include <vector>
 
 ScenePropsPanel::ScenePropsPanel(ApplicationState& p_AppState,
                                  SceneManager& p_SceneManager)
@@ -17,14 +21,19 @@ void ScenePropsPanel::Render() {
     SetPositionAndSize();
     ImGui::Begin("Scene Properties");
 
-    auto allEntities = m_SceneManager.GetAllEntities();
+    // auto allEntities = m_SceneManager.GetAllEntities();
 
-    for (uint64 e : allEntities) {
-        if (ImGui::TreeNode(m_SceneManager.GetEntityName(e).c_str())) {
+    std::vector<Entity> entities =
+        m_SceneManager.GetActiveScene().View<MeshComponent, LightComponent>();
+
+    for (Entity e :
+         m_SceneManager.GetActiveScene()
+             .Match<MeshComponent, LightComponent, CameraComponent>()) {
+        if (ImGui::TreeNode(m_SceneManager.GetEntityName(e.GetId()).c_str())) {
             ImGui::TreePop();
         }
         if (ImGui::IsItemClicked()) {
-            m_SceneManager.SelectEntity(e);
+            m_SceneManager.SelectEntity(e.GetId());
         }
     }
 

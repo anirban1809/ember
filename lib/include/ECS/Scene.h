@@ -111,6 +111,20 @@ class Scene {
         return result;
     }
 
+    template <typename... Args>
+    std::vector<Entity> Match() {
+        std::vector<Entity> result;
+
+        for (uint64 entity : m_Entities) {
+            bool match = (HasComponent<Args>(Entity(entity, this)) || ...);
+            if (match) {
+                result.emplace_back(entity, this);
+            }
+        }
+
+        return result;
+    }
+
     // std::string GetEntityName(uint64 id) { return m_EntityNames[id]; }
 
     std::unordered_set<uint64> GetAllEntities() { return m_Entities; }

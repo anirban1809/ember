@@ -134,7 +134,7 @@ void Editor::DefineUI() {
         CreateLayoutContainer<ImGuiLayoutContainer>(1, 1);
 
     lc1->AddElement(CreatePanel<ScenePropsPanel>(state, m_SceneManager), 1);
-    lc1->AddElement(CreatePanel<GeneralDetailsPanel>(state), 1);
+    lc1->AddElement(CreatePanel<GeneralDetailsPanel>(state, m_SceneManager), 1);
     lc2->AddElement(CreatePanel<FramebufferPanel>("Scene", state, scenebuffer),
                     1);
     lc3->AddElement(CreatePanel<NodePropsPanel>(state, m_SceneManager), 1);
