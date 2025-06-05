@@ -52,12 +52,30 @@ void NodePropsPanel::Render() {
         ImGui::NewLine();
 
         if (ImGui::BeginPopupContextWindow()) {
-            if (ImGui::MenuItem("Add Material")) {
-                selected.AddComponent<MaterialComponent>();
+            if (ImGui::BeginMenu("Add Material")) {
+                std::cout << "Adding material" << std::endl;
+                std::vector<Entity> materials =
+                    m_SceneManager.GetActiveScene().View<MaterialComponent>();
+
+                for (Entity material : materials) {
+                    if (ImGui::MenuItem(
+                            m_SceneManager.GetEntityName(material.GetId())
+                                .c_str())) {
+                        MaterialComponent component =
+                            material.GetComponent<MaterialComponent>();
+
+                        Entity selected = m_SceneManager.GetSelectedEntity();
+                        m_SceneManager.GetActiveScene()
+                            .AddComponent<MaterialComponent>(selected,
+                                                             component);
+                    }
+                }
+
+                ImGui::EndMenu();
             }
 
             if (ImGui::MenuItem("Add SubMesh")) {
-                std::cout << "Addind SubMesh" << std::endl;
+                std::cout << "Adding SubMesh" << std::endl;
             }
             ImGui::EndPopup();
         }

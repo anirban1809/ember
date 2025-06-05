@@ -27,7 +27,8 @@ void GeneralDetailsPanel::Render() {
             if (ImGui::MenuItem("Material")) {
                 std::cout << "Create new material" << std::endl;
                 Entity e = m_SceneManager.CreateEntity("Material");
-                e.AddComponent<MaterialComponent>();
+                m_SceneManager.GetActiveScene().AddComponent<MaterialComponent>(
+                    e, MaterialComponent());
             }
 
             ImGui::EndMenu();
