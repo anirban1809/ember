@@ -1,0 +1,38 @@
+{
+    "main": "dist/main.js",
+    "scripts": {
+        "dev:renderer": "cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 vite",
+        "start:electron": "wait-on tcp:127.0.0.1:5173 && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .",
+        "dev": "npm-run-all -p dev:renderer start:electron",
+        "build:renderer": "vite build",
+        "build:main": "tsc -p tsconfig.json",
+        "build": "npm run build:renderer && npm run build:main",
+        "native:build": "cmake-js build",
+        "native:debug": "cmake-js build --debug",
+        "redev": "npm run native:build && npm run dev",
+        "clean": "rimraf build dist CMakeFiles CMakeCache.txt",
+        "postinstall": "cmake-js build"
+    },
+    "devDependencies": {
+        "@electron/rebuild": "^4.0.1",
+        "@types/node": "^24.3.0",
+        "@types/react": "^19.1.11",
+        "@types/react-dom": "^19.1.7",
+        "@vitejs/plugin-react-swc": "^4.0.1",
+        "bindings": "^1.5.0",
+        "cmake-js": "^7.3.1",
+        "cross-env": "^10.0.0",
+        "electron": "^31.7.7",
+        "node-addon-api": "^8.5.0",
+        "node-gyp": "^11.4.1",
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^6.0.1",
+        "typescript": "^5.9.2",
+        "vite": "^7.1.3",
+        "wait-on": "^8.0.4"
+    },
+    "dependencies": {
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1"
+    }
+}
