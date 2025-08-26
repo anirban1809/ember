@@ -11,4 +11,4 @@ void draw(int width, int height);
 // Cleanup (optional)
 void shutdown();
 
-} // namespace glbackend
+}  // namespace glbackend

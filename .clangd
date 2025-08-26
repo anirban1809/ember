@@ -1,0 +1,6 @@
+CompileFlags:
+   Add: [
+    "-I/usr/local/include",
+    "-std=c++17"
+  ],
+  CompilationDatabase: ./build
