@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
-import OglMount from "./OglMount";
+import OglMount from "./components/OglMount";
+import Text from "./components/Text";
 
 export default function App() {
     const [vw, setVw] = useState(70);
@@ -54,6 +55,7 @@ export default function App() {
             <main style={{ padding: 16 }}>
                 {/* This element controls the native OpenGL view’s rect */}
                 <OglMount style={boxStyle} />
+                <Text />
             </main>
         </div>
     );

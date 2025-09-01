@@ -6,4 +6,6 @@ contextBridge.exposeInMainWorld("ogl", {
     setSurfaceId: (id: number) =>
         ipcRenderer.invoke("ogl:set-surface-id", Number(id)),
     destroyView: () => ipcRenderer.invoke("ogl:destroy-view"),
+    logMessage: (message: string) =>
+        ipcRenderer.invoke("ogl:log-message", String(message)),
 });

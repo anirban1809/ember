@@ -5,7 +5,7 @@
 
 #define GLEW_NO_GLU
 
-#include "../../vendor/glew-2.2.0/include/GL/glew.h"
+#include <GL/glew.h>
 // Optional: you may link GLFW but we DO NOT create windows/contexts here.
 // #include <GLFW/glfw3.h>
 

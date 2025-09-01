@@ -1,4 +1,5 @@
 #include <cstring>
+#include <iostream>
 #include "../node_modules/node-addon-api/napi.h"
 #include "platform/mac/platform_mac.h"
 
@@ -28,6 +29,7 @@ Napi::Value Attach(const Napi::CallbackInfo &info) {
 }
 
 Napi::Value Resize(const Napi::CallbackInfo &info) {
+    std::cout << "resizing..." << std::endl;
     Napi::Env env = info.Env();
     const int x = info[0].As<Napi::Number>().Int32Value();
     const int y = info[1].As<Napi::Number>().Int32Value();
@@ -49,11 +51,19 @@ Napi::Value Destroy(const Napi::CallbackInfo &info) {
     return info.Env().Null();
 }
 
+Napi::Value Log(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    std::string value = info[0].As<Napi::String>();
+    std::cout << "Logged: " << value << std::endl;
+    return Napi::Boolean::New(env, true);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("attachGLView", Napi::Function::New(env, Attach));
     exports.Set("resizeGLView", Napi::Function::New(env, Resize));
     exports.Set("setIOSurfaceId", Napi::Function::New(env, SetIOSurfaceId));
     exports.Set("destroyGLView", Napi::Function::New(env, Destroy));
+    exports.Set("logMessage", Napi::Function::New(env, Log));
     return exports;
 }
 

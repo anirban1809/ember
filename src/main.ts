@@ -13,6 +13,7 @@ type OglAddon = {
     resizeGLView(x: number, y: number, w: number, h: number): void;
     setIOSurfaceId(id: number): void;
     destroyGLView(): void;
+    logMessage(message: string): void;
 };
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bindings = require("bindings") as (name: string) => any;
@@ -67,6 +68,11 @@ ipcMain.handle(
         return true;
     }
 );
+
+ipcMain.handle("ogl:log-message", (_evt, message: string) => {
+    ogl.logMessage(message);
+    return true;
+});
 
 ipcMain.handle("ogl:set-surface-id", (_evt, id: number) => {
     ogl.setIOSurfaceId(Number(id));
