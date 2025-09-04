@@ -1,3 +1,5 @@
+#include <iostream>
+#include "../../node_modules/node-addon-api/napi.h"
 #include <string>
 #ifndef GL_SILENCE_DEPRECATION
 #define GL_SILENCE_DEPRECATION 1
@@ -101,6 +103,14 @@ void draw(int width, int height) {
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
     glUseProgram(0);
+}
+
+Napi::Value LogMessage(Napi::Env env) {
+    Napi::Object returnValue = Napi::Object::New(env);
+    returnValue.Set(Napi::String::New(env, "enabled"),
+                    Napi::Boolean::New(env, true));
+
+    return returnValue;
 }
 
 void shutdown() {

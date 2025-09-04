@@ -1,26 +1,26 @@
 [
-{
-  "directory": "/Users/anirban/Documents/Code/electron-gl/build",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -D_DARWIN_USE_64_BIT_INODE=1 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DBUILDING_NODE_EXTENSION -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -o CMakeFiles/oglview.dir/native/addon.cc.o -c /Users/anirban/Documents/Code/electron-gl/native/addon.cc",
-  "file": "/Users/anirban/Documents/Code/electron-gl/native/addon.cc",
-  "output": "CMakeFiles/oglview.dir/native/addon.cc.o"
-},
-{
-  "directory": "/Users/anirban/Documents/Code/electron-gl/build",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -D_DARWIN_USE_64_BIT_INODE=1 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DBUILDING_NODE_EXTENSION -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -o CMakeFiles/oglview.dir/native/renderer/gl_backend.cc.o -c /Users/anirban/Documents/Code/electron-gl/native/renderer/gl_backend.cc",
-  "file": "/Users/anirban/Documents/Code/electron-gl/native/renderer/gl_backend.cc",
-  "output": "CMakeFiles/oglview.dir/native/renderer/gl_backend.cc.o"
-},
-{
-  "directory": "/Users/anirban/Documents/Code/electron-gl/build",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -fvisibility=default -fobjc-arc -o CMakeFiles/oglview.dir/native/platform/mac/oglview.mm.o -c /Users/anirban/Documents/Code/electron-gl/native/platform/mac/oglview.mm",
-  "file": "/Users/anirban/Documents/Code/electron-gl/native/platform/mac/oglview.mm",
-  "output": "CMakeFiles/oglview.dir/native/platform/mac/oglview.mm.o"
-},
-{
-  "directory": "/Users/anirban/Documents/Code/electron-gl/build",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -fvisibility=default -fobjc-arc -o CMakeFiles/oglview.dir/native/platform/mac/BridgeGLLayer.mm.o -c /Users/anirban/Documents/Code/electron-gl/native/platform/mac/BridgeGLLayer.mm",
-  "file": "/Users/anirban/Documents/Code/electron-gl/native/platform/mac/BridgeGLLayer.mm",
-  "output": "CMakeFiles/oglview.dir/native/platform/mac/BridgeGLLayer.mm.o"
-}
+    {
+        "directory": "/Users/anirban/Documents/Code/electron-gl/build",
+        "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -D_DARWIN_USE_64_BIT_INODE=1 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DBUILDING_NODE_EXTENSION -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -o CMakeFiles/oglview.dir/native/addon.cc.o -c /Users/anirban/Documents/Code/electron-gl/native/addon.cc",
+        "file": "/Users/anirban/Documents/Code/electron-gl/native/addon.cc",
+        "output": "CMakeFiles/oglview.dir/native/addon.cc.o"
+    },
+    {
+        "directory": "/Users/anirban/Documents/Code/electron-gl/build",
+        "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -D_DARWIN_USE_64_BIT_INODE=1 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DBUILDING_NODE_EXTENSION -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -o CMakeFiles/oglview.dir/native/renderer/gl_backend.cc.o -c /Users/anirban/Documents/Code/electron-gl/native/renderer/gl_backend.cc",
+        "file": "/Users/anirban/Documents/Code/electron-gl/native/renderer/gl_backend.cc",
+        "output": "CMakeFiles/oglview.dir/native/renderer/gl_backend.cc.o"
+    },
+    {
+        "directory": "/Users/anirban/Documents/Code/electron-gl/build",
+        "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -fvisibility=default -fobjc-arc -o CMakeFiles/oglview.dir/native/Environment/MacOS/OpenGLView.mm.o -c /Users/anirban/Documents/Code/electron-gl/native/Environment/MacOS/OpenGLView.mm",
+        "file": "/Users/anirban/Documents/Code/electron-gl/native/Environment/MacOS/OpenGLView.mm",
+        "output": "CMakeFiles/oglview.dir/native/Environment/MacOS/OpenGLView.mm.o"
+    },
+    {
+        "directory": "/Users/anirban/Documents/Code/electron-gl/build",
+        "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -DGL_SILENCE_DEPRECATION=1 -DNAPI_VERSION=8 -Doglview_EXPORTS -I/Users/anirban/.cmake-js/node-arm64/v23.11.0/include/node -I/Users/anirban/Documents/Code/electron-gl/\\\"/Users/anirban/Documents/Code/electron-gl/node_modules/node-addon-api\\\" -I/Users/anirban/Documents/Code/electron-gl/vendor/glfw-3.4.bin.MACOS/include -I/Users/anirban/Documents/Code/electron-gl/vendor/glew-2.2.0/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=11.0 -fPIC -fvisibility=default -fobjc-arc -o CMakeFiles/oglview.dir/native/Environment/MacOS/BridgeGLLayer.mm.o -c /Users/anirban/Documents/Code/electron-gl/native/Environment/MacOS/BridgeGLLayer.mm",
+        "file": "/Users/anirban/Documents/Code/electron-gl/native/Environment/MacOS/BridgeGLLayer.mm",
+        "output": "CMakeFiles/oglview.dir/native/Environment/MacOS/BridgeGLLayer.mm.o"
+    }
 ]

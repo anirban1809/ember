@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
+import { logMessage } from "./api";
 
 // ---- native addon bindings ----
 type OglAddon = {
@@ -13,11 +14,11 @@ type OglAddon = {
     resizeGLView(x: number, y: number, w: number, h: number): void;
     setIOSurfaceId(id: number): void;
     destroyGLView(): void;
-    logMessage(message: string): void;
+    logMessage(message: object): void;
 };
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bindings = require("bindings") as (name: string) => any;
-const ogl: OglAddon = bindings("oglview");
+export const ogl: OglAddon = bindings("OpenGLView");
 
 let win: BrowserWindow | null = null;
 let oglAttached = false;
@@ -69,10 +70,7 @@ ipcMain.handle(
     }
 );
 
-ipcMain.handle("ogl:log-message", (_evt, message: string) => {
-    ogl.logMessage(message);
-    return true;
-});
+ipcMain.handle("ogl:log-message", logMessage);
 
 ipcMain.handle("ogl:set-surface-id", (_evt, id: number) => {
     ogl.setIOSurfaceId(Number(id));

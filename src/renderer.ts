@@ -10,7 +10,7 @@ declare global {
             }): Promise<boolean>;
             setSurfaceId?(id: number): Promise<boolean>;
             destroyView?(): Promise<void>;
-            logMessage(message: string): void;
+            logMessage(message: string): Promise<string>;
         };
     }
 }

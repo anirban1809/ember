@@ -1,4 +1,4 @@
-// native/platform/mac/oglview.mm
+
 #import <Cocoa/Cocoa.h>
 #import "BridgeGLLayer.h"
 #include "../../renderer/gl_backend.h"

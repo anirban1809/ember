@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import "./App.css";
 import OglMount from "./components/OglMount";
 import Text from "./components/Text";
 

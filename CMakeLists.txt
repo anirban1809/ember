@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(oglview LANGUAGES C CXX OBJC OBJCXX)
+project(OpenGLView LANGUAGES C CXX OBJC OBJCXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -49,14 +49,14 @@ find_library(COREVIDEO_FRAMEWORK  CoreVideo)
 
 # --- Sources ---
 set(SRC
-  native/addon.cc
+  native/Core/Addon.cc
   native/renderer/gl_backend.cc
-  native/platform/mac/oglview.mm
-  native/platform/mac/BridgeGLLayer.mm
+  native/Environment/MacOS/OpenGLView.mm
+  native/Environment/MacOS/BridgeGLLayer.mm
 )
 
 set_source_files_properties(
-  native/platform/mac/oglview.mm
+  native/platform/mac/OpenGLView.mm
   PROPERTIES
   LANGUAGE OBJCXX
 )
@@ -68,21 +68,21 @@ set_source_files_properties(
 )
 
 # --- Build Node addon (.node) ---
-add_library(oglview MODULE ${SRC} ${CMAKE_JS_SRC})
-set_target_properties(oglview PROPERTIES
+add_library(OpenGLView MODULE ${SRC} ${CMAKE_JS_SRC})
+set_target_properties(OpenGLView PROPERTIES
   PREFIX "" 
   SUFFIX ".node"
-  OUTPUT_NAME "oglview"
+  OUTPUT_NAME "OpenGLView"
   OBJCXX_VISIBILITY_PRESET default
   BUILD_RPATH "@loader_path;@loader_path/..;@loader_path/../.."
   INSTALL_RPATH "@loader_path;@loader_path/..;@loader_path/../.."
 )
 
 # ARC for ObjC++
-target_compile_options(oglview PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
+target_compile_options(OpenGLView PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
 
 # Link frameworks + vendored dylibs
-target_link_libraries(oglview PRIVATE
+target_link_libraries(OpenGLView PRIVATE
   ${COCOA_FRAMEWORK}
   ${QUARTZCORE_FRAMEWORK}
   ${OPENGL_FRAMEWORK}
@@ -93,7 +93,7 @@ target_link_libraries(oglview PRIVATE
 )
 
 if(APPLE)
-  target_link_options(oglview PRIVATE
+  target_link_options(OpenGLView PRIVATE
     "-undefined" "dynamic_lookup"
     "-ObjC" "-all_load"
   )
@@ -103,16 +103,16 @@ endif()
 get_filename_component(GLEW_BASENAME "${GLEW_LIB}" NAME)
 get_filename_component(GLFW_BASENAME "${GLFW_LIB}" NAME)
 
-add_custom_command(TARGET oglview POST_BUILD
+add_custom_command(TARGET OpenGLView POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E echo "Copying vendored dylibs to addon dir"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          "${GLEW_LIB}" "$<TARGET_FILE_DIR:oglview>/${GLEW_BASENAME}"
+          "${GLEW_LIB}" "$<TARGET_FILE_DIR:OpenGLView>/${GLEW_BASENAME}"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          "${GLFW_LIB}" "$<TARGET_FILE_DIR:oglview>/${GLFW_BASENAME}"
+          "${GLFW_LIB}" "$<TARGET_FILE_DIR:OpenGLView>/${GLFW_BASENAME}"
 
-  COMMAND install_name_tool -id "@rpath/${GLEW_BASENAME}" "$<TARGET_FILE_DIR:oglview>/${GLEW_BASENAME}"
-  COMMAND install_name_tool -id "@rpath/${GLFW_BASENAME}" "$<TARGET_FILE_DIR:oglview>/${GLFW_BASENAME}"
+  COMMAND install_name_tool -id "@rpath/${GLEW_BASENAME}" "$<TARGET_FILE_DIR:OpenGLView>/${GLEW_BASENAME}"
+  COMMAND install_name_tool -id "@rpath/${GLFW_BASENAME}" "$<TARGET_FILE_DIR:OpenGLView>/${GLFW_BASENAME}"
 
-  COMMAND install_name_tool -change "${GLEW_LIB}" "@rpath/${GLEW_BASENAME}" "$<TARGET_FILE:oglview>"
-  COMMAND install_name_tool -change "${GLFW_LIB}" "@rpath/${GLFW_BASENAME}" "$<TARGET_FILE:oglview>"
+  COMMAND install_name_tool -change "${GLEW_LIB}" "@rpath/${GLEW_BASENAME}" "$<TARGET_FILE:OpenGLView>"
+  COMMAND install_name_tool -change "${GLFW_LIB}" "@rpath/${GLFW_BASENAME}" "$<TARGET_FILE:OpenGLView>"
 )

@@ -1,16 +1,15 @@
 import React from "react";
 
 const Text = () => {
-    const logMessage = () => {
+    const logMessage = async () => {
         console.log("Logged Message");
-        window.ogl.logMessage("This is another logged message");
+        console.log(
+            "return value: ",
+            await window.ogl.logMessage("This is another logged message")
+        );
     };
 
-    return (
-        <div>
-            <button onClick={logMessage}>Log</button>
-        </div>
-    );
+    return <div className=" italic text-5xl">Log</div>;
 };
 
 export default Text;

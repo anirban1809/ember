@@ -1,7 +1,10 @@
 #include <cstring>
 #include <iostream>
-#include "../node_modules/node-addon-api/napi.h"
-#include "platform/mac/platform_mac.h"
+#include "../../node_modules/node-addon-api/napi.h"
+#include "../Environment/MacOS/Platform.h"
+#include "../renderer/gl_backend.h"
+
+#define MACOS
 
 namespace {
 
@@ -24,7 +27,9 @@ Napi::Value Attach(const Napi::CallbackInfo &info) {
     const int w = info[3].As<Napi::Number>().Int32Value();
     const int h = info[4].As<Napi::Number>().Int32Value();
 
+#ifdef MACOS
     Mac_AttachGLViewToWindow(nsWindowPtr, x, y, w, h);  // <-- pass window ptr
+#endif
     return env.Null();
 }
 
@@ -53,9 +58,7 @@ Napi::Value Destroy(const Napi::CallbackInfo &info) {
 
 Napi::Value Log(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    std::string value = info[0].As<Napi::String>();
-    std::cout << "Logged: " << value << std::endl;
-    return Napi::Boolean::New(env, true);
+    return glbackend::LogMessage(env);
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {

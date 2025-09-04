@@ -1,8 +1,8 @@
 {
     "targets": [
         {
-            "target_name": "oglview",
-            "sources": ["native/oglview.mm", "native/tri_renderer.cpp"],
+            "target_name": "OpenGLView",
+            "sources": ["native/Environment/MacOS/OpenGLView.mm"],
             "cflags": ["-DGL_SILENCE_DEPRECATION"],
             "cflags_cc": ["-std=c++17", "-fexceptions", "-DGL_SILENCE_DEPRECATION"],
             "include_dirs": ["<!@(node -p \"require('node-addon-api').include\")"],
